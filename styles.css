@@ -21,17 +21,17 @@ body {
   display: -webkit-box;
   flex-direction: row;
   flex-wrap: nowrap;
-  width: 10vw;
+  width: 15vw;
   height: 100%;
 }
 
 .slide {
   flex: 0 0 100vw;
-  padding: 40px;
+  padding: 20px;
   box-sizing: border-box;
   transition: transform 0.5s ease, opacity 0.5s ease;
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   justify-content: flex-start;
   align-items: flex-start;
 }
@@ -43,7 +43,7 @@ body {
 
 #timeline-path {
   position: absolute;
-  bottom: 50px;
+  bottom: 50%;
   left: 0;
   width: 100%;
   height: 400px;
@@ -52,7 +52,7 @@ body {
 
 .milestone {
   position: absolute;
-  bottom: 320px;
+  bottom: 80%;
   width: 12px;
   height: 12px;
   background: cyan;
