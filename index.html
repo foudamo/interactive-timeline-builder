@@ -27,7 +27,7 @@
     const timeline = document.getElementById('timeline');
     const container = document.getElementById('timeline-container');
 
-    fetch('timeline.md')
+    fetch('timeline.txt')
       .then(res => res.text())
       .then(markdown => {
         const sections = markdown.split(/^## /gm).filter(Boolean).map(s => '## ' + s);
