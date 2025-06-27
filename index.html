@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interactive Timeline</title>
+  <style>/* styles remain unchanged */</style>
+</head>
+<body>
+  <div class="controls">
+    <button id="prev">◀</button>
+    <button id="next">▶</button>
+  </div>
+  <div id="timeline-container">
+    <svg id="timeline-path" viewBox="0 0 4000 200" preserveAspectRatio="none">
+      <path id="path-line" d="M 0 100 Q 500 0, 1000 100 T 2000 100 T 3000 100 T 4000 100" stroke="#888" stroke-width="4" fill="none" stroke-dasharray="5,5" />
+    </svg>
+    <div id="timeline"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    let currentIndex = 0;
+    let slides = [];
+    const milestoneRefs = [];
+
+    const timeline = document.getElementById('timeline');
+    const container = document.getElementById('timeline-container');
+
+    fetch('timeline.md')
+      .then(res => res.text())
+      .then(markdown => {
+        const sections = markdown.split(/^## /gm).filter(Boolean).map(s => '## ' + s);
+        slides = sections.map(marked.parse);
+        buildTimeline();
+        scrollToSlide(currentIndex);
+      });
+
+    function buildTimeline() {
+      slides.forEach((html, i) => {
+        const slide = document.createElement('div');
+        slide.className = 'slide';
+        slide.innerHTML = html;
+        timeline.appendChild(slide);
+
+        const label = html.match(/<h2.*?>(.*?)<\/h2>/)?.[1] || `Step ${i + 1}`;
+
+        const dot = document.createElement('div');
+        dot.className = 'milestone';
+        dot.style.left = `${(i + 0.5) * 100 / slides.length}%`;
+        dot.setAttribute('data-label', label);
+        dot.onclick = () => {
+          currentIndex = i;
+          scrollToSlide(currentIndex);
+        };
+        milestoneRefs.push(dot);
+        container.appendChild(dot);
+      });
+    }
+
+    function scrollToSlide(index) {
+      const offset = index * window.innerWidth;
+      window.scrollTo({ left: offset, behavior: 'smooth' });
+      highlightSlide(index);
+      animatePath(index);
+      highlightDot(index);
+    }
+
+    function highlightSlide(index) {
+      document.querySelectorAll('.slide').forEach(slide => slide.classList.remove('highlight'));
+      const active = document.querySelectorAll('.slide')[index];
+      if (active) active.classList.add('highlight');
+    }
+
+    function animatePath(index) {
+      const path = document.getElementById('path-line');
+      const totalLength = path.getTotalLength();
+      const segments = slides.length;
+      const segmentLength = totalLength / segments;
+      path.style.strokeDasharray = `${segmentLength * (index + 1)}, 4000`;
+    }
+
+    function highlightDot(index) {
+      milestoneRefs.forEach(dot => dot.classList.remove('active-marker'));
+      if (milestoneRefs[index]) {
+        milestoneRefs[index].classList.add('active-marker');
+      }
+    }
+
+    document.getElementById('next').addEventListener('click', () => {
+      if (currentIndex < slides.length - 1) {
+        currentIndex++;
+        scrollToSlide(currentIndex);
+      }
+    });
+
+    document.getElementById('prev').addEventListener('click', () => {
+      if (currentIndex > 0) {
+        currentIndex--;
+        scrollToSlide(currentIndex);
+      }
+    });
+  </script>
+</body>
+</html>
