@@ -18,40 +18,29 @@
     <div id="timeline"></div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="timeline.js"></script>
   <script>
     let currentIndex = 0;
-    let slides = [];
-    const milestoneRefs = [];
-
     const timeline = document.getElementById('timeline');
     const container = document.getElementById('timeline-container');
-
-    const markdown = window.TIMELINE_MARKDOWN;
-    const sections = markdown.split(/^## /gm).filter(Boolean).map(s => '## ' + s);
-    slides = sections.map((section, i) => {
-      const html = marked.parse(section);
-      const imageTag = `<img src="assets/event${i + 1}.png" alt="Event ${i + 1}" style="width:100%; border-radius:8px; margin-top:12px;" />`;
-      return html + imageTag;
-    });
-
-    buildTimeline();
-    scrollToSlide(currentIndex);
+    const milestoneRefs = [];
+    const slides = window.TIMELINE_EVENTS;
 
     function buildTimeline() {
-      slides.forEach((html, i) => {
+      slides.forEach((event, i) => {
         const slide = document.createElement('div');
         slide.className = 'slide';
-        slide.innerHTML = html;
+        slide.innerHTML = `
+          <h2>${event.title}</h2>
+          <p>${event.content}</p>
+          <img src="${event.image}" alt="${event.title}" style="width:100%; border-radius:8px; margin-top:12px;" />
+        `;
         timeline.appendChild(slide);
-
-        const label = html.match(/<h2.*?>(.*?)<\/h2>/)?.[1] || `Step ${i + 1}`;
 
         const dot = document.createElement('div');
         dot.className = 'milestone';
         dot.style.left = `${(i + 0.5) * 100 / slides.length}%`;
-        dot.setAttribute('data-label', label);
+        dot.setAttribute('data-label', event.title);
         dot.onclick = () => {
           currentIndex = i;
           scrollToSlide(currentIndex);
@@ -103,6 +92,9 @@
         scrollToSlide(currentIndex);
       }
     });
+
+    buildTimeline();
+    scrollToSlide(currentIndex);
   </script>
 </body>
 </html>
