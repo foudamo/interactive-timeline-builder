@@ -30,7 +30,12 @@
 
     const markdown = window.TIMELINE_MARKDOWN;
     const sections = markdown.split(/^## /gm).filter(Boolean).map(s => '## ' + s);
-    slides = sections.map(marked.parse);
+    slides = sections.map((section, i) => {
+      const html = marked.parse(section);
+      const imageTag = `<img src="assets/event${i + 1}.png" alt="Event ${i + 1}" style="width:100%; border-radius:8px; margin-top:12px;" />`;
+      return html + imageTag;
+    });
+
     buildTimeline();
     scrollToSlide(currentIndex);
 
