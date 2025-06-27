@@ -1,0 +1,105 @@
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: #111;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+#timeline-container {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  min-width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  scroll-behavior: smooth;
+}
+
+#timeline {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  width: 100vw;
+}
+
+.slide {
+  flex: 0 0 100vw;
+  padding: 40px;
+  box-sizing: border-box;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+
+.slide.highlight {
+  border: 2px solid #0ff;
+}
+
+#timeline-path {
+  position: absolute;
+  bottom: 600px;
+  left: 0;
+  width: 100%;
+  height: 200px;
+  z-index: 0;
+}
+
+.milestone {
+  position: absolute;
+  bottom: 620px;
+  width: 12px;
+  height: 12px;
+  background: cyan;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.milestone:hover::after {
+  content: attr(data-label);
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #222;
+  color: white;
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  border-radius: 4px;
+  pointer-events: none;
+  z-index: 999;
+}
+
+.active-marker {
+  transform: scale(1.6);
+  background: #ff0066;
+}
+
+.controls {
+  position: fixed;
+  top: 50%;
+  left: 10px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.controls button {
+  font-size: 24px;
+  padding: 8px;
+  background: #222;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.controls button:hover {
+  background: #444;
+}
