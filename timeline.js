@@ -1,3 +1,4 @@
+window.TIMELINE_MARKDOWN = `
 ## 2020: The Beginning
 We launched our first product. Everything was chaos, but it worked.
 
@@ -15,3 +16,4 @@ We rebuilt everything with AI-driven infrastructure.
 
 ## 2025: What’s Next?
 Let’s find out together.
+`;

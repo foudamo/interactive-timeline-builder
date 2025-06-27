@@ -19,6 +19,7 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="timeline.js"></script>
   <script>
     let currentIndex = 0;
     let slides = [];
@@ -27,14 +28,11 @@
     const timeline = document.getElementById('timeline');
     const container = document.getElementById('timeline-container');
 
-    fetch('timeline.txt')
-      .then(res => res.text())
-      .then(markdown => {
-        const sections = markdown.split(/^## /gm).filter(Boolean).map(s => '## ' + s);
-        slides = sections.map(marked.parse);
-        buildTimeline();
-        scrollToSlide(currentIndex);
-      });
+    const markdown = window.TIMELINE_MARKDOWN;
+    const sections = markdown.split(/^## /gm).filter(Boolean).map(s => '## ' + s);
+    slides = sections.map(marked.parse);
+    buildTimeline();
+    scrollToSlide(currentIndex);
 
     function buildTimeline() {
       slides.forEach((html, i) => {
