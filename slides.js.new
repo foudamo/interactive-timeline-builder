@@ -1,0 +1,153 @@
+// Initialize variables
+let currentIndex = 0;
+const container = document.getElementById('timeline-container');
+const slidesContainer = document.getElementById('slides-container');
+const milestoneContainer = document.getElementById('milestones');
+const milestoneRefs = [];
+const tooltip = document.getElementById('tooltip');
+const tracker = document.getElementById('tracker-dot');
+const pathSvg = document.getElementById('timeline-path');
+const pathLine = document.getElementById('path-line');
+const slides = window.TIMELINE_EVENTS || [];
+const prevButton = document.getElementById('prev');
+const nextButton = document.getElementById('next');
+
+// Calculate dimensions based on 16:9 ratio
+function calculateDimensions() {
+  // Get the container dimensions
+  const containerRect = container.getBoundingClientRect();
+  const containerWidth = containerRect.width;
+  
+  // Calculate height based on 16:9 ratio
+  const containerHeight = containerWidth * (9/16);
+  
+  // Set SVG viewBox
+  pathSvg.setAttribute('viewBox', `0 0 ${containerWidth} ${containerHeight}`);
+  
+  // Return dimensions object
+  return {
+    width: containerWidth,
+    height: containerHeight,
+    aspectRatio: 16/9
+  };
+}
+
+// Generate a dynamic path based on 16:9 ratio and number of events
+function generateTimelinePath(eventCount) {
+  // Get container dimensions
+  const dimensions = calculateDimensions();
+  const totalWidth = dimensions.width;
+  const maxHeight = dimensions.height;
+  
+  // Calculate segment width based on number of events
+  const segmentWidth = totalWidth / Math.max(eventCount - 1, 1);
+  
+  // Start path at the left middle
+  let d = `M 0 ${maxHeight / 2}`;
+  const points = [];
+  
+  // Store the first point
+  points.push({ x: 0, y: maxHeight / 2 });
+  
+  // Create a more organic, wavy, looping path that fills the space
+  for (let i = 1; i < eventCount; i++) {
+    const x = i * segmentWidth;
+    let y;
+    
+    // Create a more pronounced wave pattern with varied heights
+    if (i % 2 === 0) {
+      // Even points go higher
+      y = maxHeight * (0.2 + Math.random() * 0.15);
+    } else {
+      // Odd points go lower
+      y = maxHeight * (0.65 + Math.random() * 0.15);
+    }
+    
+    // Store the point for later use with dots
+    points.push({ x, y });
+    
+    // Create more organic curves between points
+    const prevPoint = points[i-1];
+    
+    // Add control points for a more fluid, organic feel
+    const cp1x = prevPoint.x + (x - prevPoint.x) * (0.3 + Math.random() * 0.2);
+    const cp1y = prevPoint.y + (Math.random() - 0.5) * (maxHeight * 0.3);
+    
+    const cp2x = x - (x - prevPoint.x) * (0.3 + Math.random() * 0.2);
+    const cp2y = y + (Math.random() - 0.5) * (maxHeight * 0.3);
+    
+    // Use cubic Bezier curves for more organic flow
+    d += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${x} ${y}`;
+  }
+  
+  // Store the points globally for dot positioning
+  window.pathPoints = points;
+  
+  return d;
+}
+
+// Build the timeline with milestone dots and slides
+function buildTimeline() {
+  // Clear existing elements
+  container.querySelectorAll('.milestone').forEach(el => el.remove());
+  if (slidesContainer) slidesContainer.innerHTML = '';
+  milestoneRefs.length = 0;
+  
+  const points = window.pathPoints || [];
+  
+  // Create dots and slides for each event
+  slides.forEach((event, i) => {
+    // Use our pre-calculated points for better positioning
+    const point = points[i] || { x: 0, y: 0 };
+    
+    // Create milestone dot
+    const dot = document.createElement('div');
+    dot.className = 'milestone';
+    dot.style.left = `${point.x}px`;
+    dot.style.top = `${point.y}px`;
+    dot.setAttribute('data-label', event.title);
+    
+    // Add event listeners
+    dot.addEventListener('mouseenter', (e) => {
+      tooltip.style.left = `${e.pageX}px`;
+      tooltip.style.top = `${e.pageY - 30}px`;
+      tooltip.innerText = event.title;
+      tooltip.style.display = 'block';
+    });
+    
+    dot.addEventListener('mouseleave', () => {
+      tooltip.style.display = 'none';
+    });
+    
+    dot.onclick = () => {
+      currentIndex = i;
+      highlightSlide(i);
+      animatePath(i);
+      highlightDot(i);
+      moveTracker(i);
+    };
+    
+    milestoneRefs.push(dot);
+    container.appendChild(dot);
+    
+    // Create slide with proper positioning
+    const slide = document.createElement('div');
+    slide.className = 'slide';
+    
+    // Position slide based on whether it's on top or bottom of the path
+    const dimensions = calculateDimensions();
+    const isTop = point.y < dimensions.height / 2;
+    
+    // Initial position (will be centered when active)
+    slide.style.left = `${point.x}px`;
+    slide.style.top = isTop ? `${point.y + 40}px` : `${point.y - 180}px`;
+    
+    slide.innerHTML = `
+      <h2>${event.title}</h2>
+      <p>${event.content}</p>
+      ${event.image ? `<img src="${event.image}" alt="${event.title}" />` : ''}
+    `;
+    
+    slidesContainer.appendChild(slide);
+  });
+}

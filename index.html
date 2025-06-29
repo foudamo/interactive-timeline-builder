@@ -2,99 +2,39 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Interactive Timeline</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div class="controls">
     <button id="prev">◀</button>
     <button id="next">▶</button>
   </div>
-  <div id="timeline-container">
-    <svg id="timeline-path" viewBox="0 0 4000 200" preserveAspectRatio="none">
-      <path id="path-line" d="M 0 100 Q 500 0, 1000 100 T 2000 100 T 3000 100 T 4000 100" stroke="#888" stroke-width="4" fill="none" stroke-dasharray="5,5" />
-    </svg>
-    <div id="timeline"></div>
+
+  <div id="timeline-wrapper">
+    <div id="timeline-container" class="aspect-ratio-16-9">
+      <svg id="timeline-path" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="timeline-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#8A2BE2" /> <!-- BlueViolet -->
+            <stop offset="25%" stop-color="#1E90FF" /> <!-- DodgerBlue -->
+            <stop offset="50%" stop-color="#00CED1" /> <!-- DarkTurquoise -->
+            <stop offset="75%" stop-color="#9370DB" /> <!-- MediumPurple -->
+            <stop offset="100%" stop-color="#FF69B4" /> <!-- HotPink -->
+          </linearGradient>
+        </defs>
+        <path id="path-line" />
+      </svg>
+      <div class="tooltip" id="tooltip"></div>
+      <div id="tracker-dot"></div>
+      <div id="milestones"></div>
+      <div id="slides-container"></div>
+    </div>
   </div>
 
   <script src="timeline.js"></script>
-  <script>
-    let currentIndex = 0;
-    const timeline = document.getElementById('timeline');
-    const container = document.getElementById('timeline-container');
-    const milestoneRefs = [];
-    const slides = window.TIMELINE_EVENTS;
-
-    function buildTimeline() {
-      slides.forEach((event, i) => {
-        const slide = document.createElement('div');
-        slide.className = 'slide';
-        slide.innerHTML = `
-          <h2>${event.title}</h2>
-          <p>${event.content}</p>
-          <img src="${event.image}" alt="${event.title}" style="width:100%; border-radius:8px; margin-top:12px;" />
-        `;
-        timeline.appendChild(slide);
-
-        const dot = document.createElement('div');
-        dot.className = 'milestone';
-        dot.style.left = `${(i + 0.5) * 100 / slides.length}%`;
-        dot.setAttribute('data-label', event.title);
-        dot.onclick = () => {
-          currentIndex = i;
-          scrollToSlide(currentIndex);
-        };
-        milestoneRefs.push(dot);
-        container.appendChild(dot);
-      });
-    }
-
-    function scrollToSlide(index) {
-      const offset = index * window.innerWidth;
-      window.scrollTo({ left: offset, behavior: 'smooth' });
-      highlightSlide(index);
-      animatePath(index);
-      highlightDot(index);
-    }
-
-    function highlightSlide(index) {
-      document.querySelectorAll('.slide').forEach(slide => slide.classList.remove('highlight'));
-      const active = document.querySelectorAll('.slide')[index];
-      if (active) active.classList.add('highlight');
-    }
-
-    function animatePath(index) {
-      const path = document.getElementById('path-line');
-      const totalLength = path.getTotalLength();
-      const segments = slides.length;
-      const segmentLength = totalLength / segments;
-      path.style.strokeDasharray = `${segmentLength * (index + 1)}, 4000`;
-    }
-
-    function highlightDot(index) {
-      milestoneRefs.forEach(dot => dot.classList.remove('active-marker'));
-      if (milestoneRefs[index]) {
-        milestoneRefs[index].classList.add('active-marker');
-      }
-    }
-
-    document.getElementById('next').addEventListener('click', () => {
-      if (currentIndex < slides.length - 1) {
-        currentIndex++;
-        scrollToSlide(currentIndex);
-      }
-    });
-
-    document.getElementById('prev').addEventListener('click', () => {
-      if (currentIndex > 0) {
-        currentIndex--;
-        scrollToSlide(currentIndex);
-      }
-    });
-
-    buildTimeline();
-    scrollToSlide(currentIndex);
-  </script>
+  <script src="layout.js"></script>
+  <script src="slides.js"></script>
 </body>
 </html>

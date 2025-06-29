@@ -1,0 +1,130 @@
+// Highlight the active slide and center it
+function highlightSlide(index) {
+  const slides = document.querySelectorAll('.slide');
+  
+  // Remove active class from all slides
+  slides.forEach((slide, i) => {
+    slide.classList.remove('active');
+  });
+  
+  // Get the active slide
+  const active = slides[index];
+  if (active) {
+    // Add active class to the current slide
+    active.classList.add('active');
+    
+    // Get the corresponding milestone dot position
+    const point = window.pathPoints[index];
+    
+    if (point) {
+      // Center the timeline container on this point
+      const dimensions = calculateDimensions();
+      
+      // Calculate the center position for the active slide
+      // This makes the active slide fill ~60% of the screen and be centered
+      const containerRect = container.getBoundingClientRect();
+      const containerCenterX = containerRect.width / 2;
+      const containerCenterY = containerRect.height / 2;
+      
+      // Calculate the transform needed to center the point
+      const translateX = containerCenterX - point.x;
+      const translateY = containerCenterY - point.y;
+      
+      // Apply the transform to the container
+      container.style.transition = 'transform 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
+      container.style.transform = `translate(${translateX}px, ${translateY}px)`;
+    }
+  }
+}
+
+// Animate the path to focus on the current segment
+function animatePath(index) {
+  const totalLength = pathLine.getTotalLength();
+  const segmentLength = totalLength / slides.length;
+  const dashOffset = totalLength - (segmentLength * (index + 1));
+  
+  // Animate the path drawing
+  pathLine.style.strokeDasharray = `${totalLength}`;
+  pathLine.style.strokeDashoffset = `${dashOffset}`;
+}
+
+// Highlight the active milestone dot
+function highlightDot(index) {
+  milestoneRefs.forEach(dot => dot.classList.remove('active-marker'));
+  if (milestoneRefs[index]) {
+    milestoneRefs[index].classList.add('active-marker');
+  }
+}
+
+// Move the tracker dot to the current milestone
+function moveTracker(index) {
+  const points = window.pathPoints || [];
+  const point = points[index];
+  
+  if (point) {
+    tracker.style.left = `${point.x}px`;
+    tracker.style.top = `${point.y}px`;
+  }
+}
+
+// Set up event listeners for navigation
+nextButton.addEventListener('click', () => {
+  if (currentIndex < slides.length - 1) {
+    currentIndex++;
+    highlightSlide(currentIndex);
+    animatePath(currentIndex);
+    highlightDot(currentIndex);
+    moveTracker(currentIndex);
+  }
+});
+
+prevButton.addEventListener('click', () => {
+  if (currentIndex > 0) {
+    currentIndex--;
+    highlightSlide(currentIndex);
+    animatePath(currentIndex);
+    highlightDot(currentIndex);
+    moveTracker(currentIndex);
+  }
+});
+
+// Handle window resize
+window.addEventListener('resize', () => {
+  // Recalculate dimensions and regenerate path
+  const dimensions = calculateDimensions();
+  const newPath = generateTimelinePath(slides.length);
+  pathLine.setAttribute('d', newPath);
+  
+  // Rebuild timeline with new dimensions
+  buildTimeline();
+  
+  // Update current slide
+  highlightSlide(currentIndex);
+  animatePath(currentIndex);
+  highlightDot(currentIndex);
+  moveTracker(currentIndex);
+});
+
+// Initialize the timeline
+function initTimeline() {
+  // Generate the path
+  const path = generateTimelinePath(slides.length);
+  pathLine.setAttribute('d', path);
+  
+  // Build the timeline
+  buildTimeline();
+  
+  // Highlight the first slide
+  highlightSlide(currentIndex);
+  animatePath(currentIndex);
+  highlightDot(currentIndex);
+  moveTracker(currentIndex);
+}
+
+// Start the timeline when the page loads
+window.addEventListener('DOMContentLoaded', initTimeline);
+
+// If the DOM is already loaded, initialize now
+if (document.readyState === 'interactive' || document.readyState === 'complete') {
+  initTimeline();
+}
