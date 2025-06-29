@@ -142,11 +142,56 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function updateTimelineView() {
+  function updateTimelineView(duration = 1200) {
     highlightSlide(currentIndex);
-    animatePath(currentIndex);
     highlightDot(currentIndex);
     moveTracker(currentIndex);
+
+    const point = layout.milestonePoints[currentIndex];
+    const slidePosition = layout.slidePositions[currentIndex];
+
+    // Safety check: If point or slide position is missing, abort.
+    if (!point || !slidePosition) {
+      console.error(`Layout data missing for index ${currentIndex}. Aborting zoom.`);
+      container.style.transform = 'scale(1) translate(0px, 0px)';
+      return;
+    }
+
+    // --- Dynamic Zoom Calculation ---
+    const slideWidth = 140; // These should ideally come from a shared config
+    const slideHeight = 200;
+    const dotRadius = 15;
+    const screenPadding = 0.60; // Use 60% of the screen as padding
+
+    // 1. Calculate the bounding box that contains the dot and the slide
+    const bboxX1 = Math.min(point.x - dotRadius, slidePosition.x);
+    const bboxY1 = Math.min(point.y - dotRadius, slidePosition.y);
+    const bboxX2 = Math.max(point.x + dotRadius, slidePosition.x + slideWidth);
+    const bboxY2 = Math.max(point.y + dotRadius, slidePosition.y + slideHeight);
+
+    const bbox = {
+      x: bboxX1,
+      y: bboxY1,
+      width: bboxX2 - bboxX1,
+      height: bboxY2 - bboxY1,
+    };
+
+    // 2. Calculate the scale required to make the bounding box fit the screen
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+    const scaleX = screenWidth * (1 - screenPadding) / bbox.width;
+    const scaleY = screenHeight * (1 - screenPadding) / bbox.height;
+    const scale = Math.min(scaleX, scaleY);
+
+    // 3. Calculate the translation needed to center the scaled bounding box
+    const bboxCenterX = bbox.x + bbox.width / 2;
+    const bboxCenterY = bbox.y + bbox.height / 2;
+    const translateX = (screenWidth / 2) / scale - bboxCenterX;
+    const translateY = (screenHeight / 2) / scale - bboxCenterY;
+
+    // 4. Apply the new transform
+    container.style.transitionDuration = `${duration}ms`;
+    container.style.transform = `scale(${scale}) translate(${translateX}px, ${translateY}px)`;
   }
 
   // --- Initialization and Event Listeners ---
@@ -154,11 +199,11 @@ document.addEventListener('DOMContentLoaded', () => {
   function initializeTimeline() {
     const dimensions = calculateDimensions();
     layout = calculateLayout(timeline.events.length, dimensions.width, dimensions.height);
-    
+
     buildTimeline(layout.pathDefinition, layout.milestonePoints);
     renderSlides(layout.slidePositions, layout.connectorData);
-    
-    updateTimelineView();
+
+    updateTimelineView(0); // No animation for initial focus
   }
 
   initializeTimeline();
@@ -170,7 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-    document.getElementById('prev').addEventListener('click', () => {
+  document.getElementById('prev').addEventListener('click', () => {
     if (currentIndex > 0) {
       currentIndex--;
       updateTimelineView();
@@ -178,4 +223,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   window.addEventListener('resize', initializeTimeline);
+
+  console.log('Timeline initialized and event listeners attached.');
 });

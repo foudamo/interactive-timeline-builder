@@ -78,35 +78,46 @@ function calculateLayout(eventCount, containerWidth, containerHeight) {
   }
 
   milestonePoints.forEach((point, index) => {
-        const safeDistance = 80;
-    const candidatePositions = [
-      { x: point.x - slideWidth / 2, y: point.y - slideHeight - safeDistance }, // Top
-      { x: point.x - slideWidth / 2, y: point.y + safeDistance }, // Bottom
-      { x: point.x + safeDistance, y: point.y - slideHeight / 2 }, // Right
-      { x: point.x - slideWidth - safeDistance, y: point.y - slideHeight / 2 }, // Left
-    ];
-
-    const scoredPositions = candidatePositions
-      .map(pos => {
-        const rect = { x: pos.x, y: pos.y, width: slideWidth, height: slideHeight };
-        // The score is the sum of the distances to the nearest horizontal and vertical edges.
-        // This favors positions that are more centered in available space.
-        const dist_h = Math.min(rect.x - edgeMarginX, containerWidth - edgeMarginX - (rect.x + rect.width));
-        const dist_v = Math.min(rect.y - edgeMarginY, containerHeight - edgeMarginY - (rect.y + rect.height));
-        const score = dist_h + dist_v;
-
-        return { rect, score, is_colliding: isColliding(rect) };
-      })
-      .filter(p => !p.is_colliding)
-      .sort((a, b) => b.score - a.score); // Sort by score descending
-
     let finalPosition;
-    if (scoredPositions.length > 0) {
-      finalPosition = scoredPositions[0].rect;
-    } else {
-      // Fallback if all positions collide, just take the first candidate
-      finalPosition = { x: candidatePositions[0].x, y: candidatePositions[0].y, width: slideWidth, height: slideHeight };
-      console.warn(`Could not find a non-colliding position for slide ${index}. Using fallback.`);
+    let foundPosition = false;
+    const step = 10; // How far to step in each spiral direction
+    let stepsInDirection = 1;
+    let stepCount = 0;
+    let direction = 0; // 0: right, 1: down, 2: left, 3: up
+    let searchX = point.x;
+    let searchY = point.y;
+
+    // Spiral search for a non-colliding position
+    for (let i = 0; i < 500; i++) { // Limit iterations to prevent infinite loops
+        const rect = { x: searchX - slideWidth / 2, y: searchY - slideHeight / 2, width: slideWidth, height: slideHeight };
+        if (!isColliding(rect)) {
+            finalPosition = rect;
+            foundPosition = true;
+            break;
+        }
+
+        // Move to the next position in the spiral
+        switch (direction) {
+            case 0: searchX += step; break; // Right
+            case 1: searchY += step; break; // Down
+            case 2: searchX -= step; break; // Left
+            case 3: searchY -= step; break; // Up
+        }
+
+        stepCount++;
+        if (stepCount >= stepsInDirection) {
+            stepCount = 0;
+            direction = (direction + 1) % 4;
+            if (direction === 0 || direction === 2) {
+                stepsInDirection++;
+            }
+        }
+    }
+
+    if (!foundPosition) {
+        // If spiral fails, place it at the top as a last resort.
+        finalPosition = { x: point.x - slideWidth / 2, y: edgeMarginY, width: slideWidth, height: slideHeight };
+        console.warn(`Could not find a non-colliding position for slide ${index} even with spiral search. Using fallback.`);
     }
 
     placedSlides.push(finalPosition);
