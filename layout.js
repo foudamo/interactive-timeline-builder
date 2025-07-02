@@ -1,7 +1,56 @@
-function calculateLayout(eventCount, containerWidth, containerHeight) {
+function calculateMobileLayout(eventCount, containerWidth, containerHeight, slideWidth, slideHeight) {
+  const milestonePoints = [];
+  const slidePositions = [];
+  const connectorData = [];
+
+  const edgeMarginY = containerHeight * 0.1;
+  const usableHeight = containerHeight - edgeMarginY * 2;
+  const segmentHeight = usableHeight / Math.max(1, eventCount - 1);
+  const pathX = containerWidth / 2;
+
+  let pathDefinition = `M ${pathX} ${edgeMarginY}`;
+
+  for (let i = 0; i < eventCount; i++) {
+    const y = edgeMarginY + i * segmentHeight;
+    milestonePoints.push({ x: pathX, y });
+    pathDefinition += ` L ${pathX} ${y}`;
+
+    const slideX = (i % 2 === 0) ? (pathX - slideWidth - 30) : (pathX + 30);
+    const slideY = y - (slideHeight / 2);
+    slidePositions.push({ x: slideX, y: slideY });
+
+    const startPoint = { x: (i % 2 === 0) ? slideX + slideWidth : slideX, y: y };
+    const angle = Math.atan2(y - startPoint.y, pathX - startPoint.x);
+    const distance = Math.sqrt(Math.pow(pathX - startPoint.x, 2) + Math.pow(y - startPoint.y, 2));
+    connectorData.push({ startPoint, angle, distance });
+  }
+
+  return {
+    pathDefinition,
+    milestonePoints,
+    slidePositions,
+    connectorData,
+  };
+}
+
+function calculateLayout(eventCount, containerWidth, containerHeight, slideWidth, slideHeight, isMobile) {
+  if (isMobile) {
+    return calculateMobileLayout(eventCount, containerWidth, containerHeight, slideWidth, slideHeight);
+  }
+
+  // --- 0. Safety Check for No Events ---
+  if (eventCount === 0) {
+    return {
+      pathDefinition: '',
+      milestonePoints: [],
+      slidePositions: [],
+      connectorData: [],
+    };
+  }
+
   // --- 1. Define Parameters & Margins ---
-  const edgeMarginX = containerWidth * 0.05;
-  const edgeMarginY = containerHeight * 0.05;
+  const edgeMarginX = containerWidth * 0.1;
+  const edgeMarginY = containerHeight * 0.1;
   const usableWidth = containerWidth - edgeMarginX * 2;
   const usableHeight = containerHeight - edgeMarginY * 2;
 
@@ -10,18 +59,15 @@ function calculateLayout(eventCount, containerWidth, containerHeight) {
   const segmentWidth = usableWidth / Math.max(1, eventCount - 1);
   for (let i = 0; i < eventCount; i++) {
     const x = edgeMarginX + i * segmentWidth;
-    // Simple alternating pattern for now to ensure no path overlap
-    let y = edgeMarginY + usableHeight * (i % 2 === 0 ? 0.25 : 0.75);
-    // Add some randomness
-    y += (Math.random() - 0.5) * usableHeight * 0.2;
-    // Clamp to vertical margins
+    let y = edgeMarginY + usableHeight * (i % 2 === 0 ? 0.35 : 0.65);
+    y += (Math.random() - 0.5) * usableHeight * 0.15;
     y = Math.max(edgeMarginY, Math.min(y, containerHeight - edgeMarginY));
     milestonePoints.push({ x, y });
   }
 
   // --- 3. Generate Smooth Path through Dots (Bézier Spline) ---
   let pathDefinition = `M ${milestonePoints[0].x} ${milestonePoints[0].y}`;
-  const tension = 0.4; // Controls the curviness
+  const tension = 0.4;
 
   for (let i = 0; i < milestonePoints.length - 1; i++) {
     const p0 = milestonePoints[i - 1] || milestonePoints[i];
@@ -43,87 +89,70 @@ function calculateLayout(eventCount, containerWidth, containerHeight) {
   // --- 4. Position Slides with Collision Detection ---
   const slidePositions = [];
   const connectorData = [];
-  const placedSlides = []; // Stores bounding boxes of placed slides
-    const slideWidth = 140;
-  const slideHeight = 200;
-  const dotRadius = 15; // A larger radius for collision checking
+  const placedSlides = [];
+  const dotRadius = 15;
 
   function isColliding(rect) {
-    // Check screen boundaries
-    if (rect.x < edgeMarginX || rect.x + rect.width > containerWidth - edgeMarginX ||
-        rect.y < edgeMarginY || rect.y + rect.height > containerHeight - edgeMarginY) {
-      return true;
+    if (rect.x < 0 || rect.x + rect.width > containerWidth ||
+        rect.y < 0 || rect.y + rect.height > containerHeight) {
+      return true; // Check screen boundaries
     }
-
-    // Check against other slides
     for (const other of placedSlides) {
       if (rect.x < other.x + other.width && rect.x + rect.width > other.x &&
           rect.y < other.y + other.height && rect.y + rect.height > other.y) {
-        return true;
+        return true; // Check against other slides
       }
     }
-
-    // Check against all milestone dots (not just the current one)
     for (const dot of milestonePoints) {
-        const dist = Math.sqrt(Math.pow(rect.x + slideWidth/2 - dot.x, 2) + Math.pow(rect.y + slideHeight/2 - dot.y, 2));
-        if (dist < (slideWidth/2 + dotRadius)) { // Simplified circular check
-            return true;
-        }
+      const dist = Math.sqrt(Math.pow(rect.x + slideWidth / 2 - dot.x, 2) + Math.pow(rect.y + slideHeight / 2 - dot.y, 2));
+      if (dist < (slideWidth / 2 + dotRadius * 2)) { // Increased radius for more spacing
+        return true; // Check against milestone dots
+      }
     }
-    
-    // Note: Path collision is implicitly handled by placing slides far from dots
-    // and the path generation logic which keeps the path near the dots.
-
     return false;
   }
 
   milestonePoints.forEach((point, index) => {
     let finalPosition;
     let foundPosition = false;
-    const step = 10; // How far to step in each spiral direction
+    const step = 10;
     let stepsInDirection = 1;
     let stepCount = 0;
-    let direction = 0; // 0: right, 1: down, 2: left, 3: up
+    let direction = 0;
     let searchX = point.x;
     let searchY = point.y;
 
-    // Spiral search for a non-colliding position
-    for (let i = 0; i < 500; i++) { // Limit iterations to prevent infinite loops
-        const rect = { x: searchX - slideWidth / 2, y: searchY - slideHeight / 2, width: slideWidth, height: slideHeight };
-        if (!isColliding(rect)) {
-            finalPosition = rect;
-            foundPosition = true;
-            break;
+    for (let i = 0; i < 500; i++) {
+      const rect = { x: searchX - slideWidth / 2, y: searchY - slideHeight / 2, width: slideWidth, height: slideHeight };
+      if (!isColliding(rect)) {
+        finalPosition = rect;
+        foundPosition = true;
+        break;
+      }
+      switch (direction) {
+        case 0: searchX += step; break;
+        case 1: searchY += step; break;
+        case 2: searchX -= step; break;
+        case 3: searchY -= step; break;
+      }
+      stepCount++;
+      if (stepCount >= stepsInDirection) {
+        stepCount = 0;
+        direction = (direction + 1) % 4;
+        if (direction === 0 || direction === 2) {
+          stepsInDirection++;
         }
-
-        // Move to the next position in the spiral
-        switch (direction) {
-            case 0: searchX += step; break; // Right
-            case 1: searchY += step; break; // Down
-            case 2: searchX -= step; break; // Left
-            case 3: searchY -= step; break; // Up
-        }
-
-        stepCount++;
-        if (stepCount >= stepsInDirection) {
-            stepCount = 0;
-            direction = (direction + 1) % 4;
-            if (direction === 0 || direction === 2) {
-                stepsInDirection++;
-            }
-        }
+      }
     }
 
     if (!foundPosition) {
-        // If spiral fails, place it at the top as a last resort.
-        finalPosition = { x: point.x - slideWidth / 2, y: edgeMarginY, width: slideWidth, height: slideHeight };
-        console.warn(`Could not find a non-colliding position for slide ${index} even with spiral search. Using fallback.`);
+      finalPosition = { x: point.x - slideWidth / 2, y: edgeMarginY, width: slideWidth, height: slideHeight };
+      console.warn(`Could not find a non-colliding position for slide ${index}. Using fallback.`);
     }
 
     placedSlides.push(finalPosition);
     slidePositions.push({ x: finalPosition.x, y: finalPosition.y });
 
-    // Connector line data: from dot to the closest point on the slide's edge
     const connectionPointX = Math.max(finalPosition.x, Math.min(point.x, finalPosition.x + slideWidth));
     const connectionPointY = Math.max(finalPosition.y, Math.min(point.y, finalPosition.y + slideHeight));
     const startPoint = { x: connectionPointX, y: connectionPointY };

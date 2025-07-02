@@ -26,68 +26,62 @@ body {
 }
 
 #timeline-wrapper {
-  width: 100%;
+  position: relative;
+  width: 100vw;
   height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  overflow: hidden;
   background-color: #000;
 }
 
 #timeline-container {
-  width: 100%;
-  max-width: 1600px;
-  margin: 0 auto;
-  background-color: rgba(0, 0, 0, 0.8);
+  position: absolute;
+  width: 1920px; /* Fixed virtual width */
+  height: 1080px; /* Fixed virtual height */
+  left: 0;
+  top: 0;
+  transform-origin: 0 0; /* Scale from the top-left corner */
+  background-color: rgba(255, 255, 255, 0.05);
   border-radius: 16px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   transition: transform 1.2s cubic-bezier(0.18, 0.89, 0.32, 1.05);
-  transform-origin: 0 0;
-  transform: translate(0) scale(1);
 }
 
 .controls {
   position: fixed;
-  bottom: 30px;
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 100;
   display: flex;
-  gap: 20px;
-}
-
-#prev, #next {
-  position: -webkit-sticky;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(255, 255, 255, 0.2);
-  border: none;
-  color: white;
-  font-size: 16px;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  cursor: pointer;
-  z-index: 100;
-  transition: background 0.3s;
+  gap: 15px;
 }
 
 .controls button {
-  padding: 8px 16px;
-  background: rgba(0, 0, 0, 0.7);
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   color: #fff;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 30px;
+  border-radius: 50%;
   cursor: pointer;
-  font-size: 16px;
   transition: all 0.3s ease;
   outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 }
 
 .controls button:hover {
-  background: rgba(138, 43, 226, 0.7);
-  border-color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.2);
   transform: scale(1.05);
+}
+
+.controls button svg {
+  width: 28px;
+  height: 28px;
 }
 
 #timeline-path {
@@ -156,6 +150,50 @@ body {
   height: 2px;
   pointer-events: none;
   box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}
+
+/* --- Responsive Design --- */
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+
+  .title-container h1 {
+    font-size: 2.5em; /* Smaller title on mobile */
+  }
+
+  .title-container h2 {
+    font-size: 1em; /* Smaller subtitle on mobile */
+  }
+
+  .controls {
+    bottom: 25px;
+    gap: 10px;
+  }
+
+  .controls button {
+    width: 50px;
+    height: 50px;
+  }
+
+  .controls button svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .slide {
+    padding: 20px; /* Reduced padding */
+    width: 120px; /* Match JS */
+    min-height: 180px; /* Match JS */
+  }
+
+  .slide h2 {
+    font-size: 1.1em;
+  }
+
+  .slide p {
+    font-size: 0.9em;
+  }
 }
 
 .slide::before {
@@ -251,22 +289,4 @@ body {
   border-radius: 4px;
   display: none;
   z-index: 10;
-}
-
-.controls {
-  position: fixed;
-  left: 50px;
-  top: 10px;
-  z-index: 20;
-}
-
-button {
-  background: #444;
-  color: white;
-  font-size: 20px;
-  border: none;
-  margin: 4px;
-  padding: 8px 12px;
-  border-radius: 6px;
-  cursor: pointer;
 }

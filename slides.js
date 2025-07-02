@@ -153,17 +153,28 @@ document.addEventListener('DOMContentLoaded', () => {
     // Safety check: If point or slide position is missing, abort.
     if (!point || !slidePosition) {
       console.error(`Layout data missing for index ${currentIndex}. Aborting zoom.`);
-      container.style.transform = 'scale(1) translate(0px, 0px)';
+      // Reset to a default, centered, scaled-down view if data is missing
+      const screenWidth = window.innerWidth;
+      const screenHeight = window.innerHeight;
+      const scaleX = screenWidth / 1920;
+      const scaleY = screenHeight / 1080;
+      const scale = Math.min(scaleX, scaleY);
+      const translateX = (screenWidth - 1920 * scale) / (2 * scale);
+      const translateY = (screenHeight - 1080 * scale) / (2 * scale);
+      container.style.transform = `scale(${scale}) translate(${translateX}px, ${translateY}px)`;
       return;
     }
 
-    // --- Dynamic Zoom Calculation ---
-    const slideWidth = 140; // These should ideally come from a shared config
-    const slideHeight = 200;
+    // --- Dynamic Zoom Calculation for Fixed Canvas ---
+    const slideWidth = 140; // Standard slide width
+    const slideHeight = 200; // Standard slide height
     const dotRadius = 15;
-    const screenPadding = 0.60; // Use 60% of the screen as padding
+        const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+    const isLandscape = screenWidth > screenHeight;
+    const screenPadding = isLandscape ? 0.4 : 0.2; // Zoom in more in landscape
 
-    // 1. Calculate the bounding box that contains the dot and the slide
+    // 1. Calculate the bounding box of the focused event (dot + slide) in the virtual canvas
     const bboxX1 = Math.min(point.x - dotRadius, slidePosition.x);
     const bboxY1 = Math.min(point.y - dotRadius, slidePosition.y);
     const bboxX2 = Math.max(point.x + dotRadius, slidePosition.x + slideWidth);
@@ -176,18 +187,20 @@ document.addEventListener('DOMContentLoaded', () => {
       height: bboxY2 - bboxY1,
     };
 
-    // 2. Calculate the scale required to make the bounding box fit the screen
-    const screenWidth = window.innerWidth;
-    const screenHeight = window.innerHeight;
+    // 2. Calculate the scale required to make the bounding box fit the viewport
     const scaleX = screenWidth * (1 - screenPadding) / bbox.width;
     const scaleY = screenHeight * (1 - screenPadding) / bbox.height;
     const scale = Math.min(scaleX, scaleY);
 
-    // 3. Calculate the translation needed to center the scaled bounding box
+    // 3. Calculate the translation needed to center the scaled bounding box in the viewport
     const bboxCenterX = bbox.x + bbox.width / 2;
     const bboxCenterY = bbox.y + bbox.height / 2;
+
+    // Formula: translate = (screen_center / scale) - bbox_center
     const translateX = (screenWidth / 2) / scale - bboxCenterX;
-    const translateY = (screenHeight / 2) / scale - bboxCenterY;
+    // Adjust vertical center in landscape to move the view up
+    const verticalCenter = isLandscape ? screenHeight * 0.45 : screenHeight / 2;
+    const translateY = verticalCenter / scale - bboxCenterY;
 
     // 4. Apply the new transform
     container.style.transitionDuration = `${duration}ms`;
@@ -197,13 +210,19 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Initialization and Event Listeners ---
 
   function initializeTimeline() {
-    const dimensions = calculateDimensions();
-    layout = calculateLayout(timeline.events.length, dimensions.width, dimensions.height);
+    const virtualWidth = 1920;
+    const virtualHeight = 1080;
+    const slideWidth = 140; // Standard slide width
+    const slideHeight = 200; // Standard slide height
+
+    // Always use the landscape layout logic with fixed dimensions
+    layout = calculateLayout(timeline.events.length, virtualWidth, virtualHeight, slideWidth, slideHeight, false);
 
     buildTimeline(layout.pathDefinition, layout.milestonePoints);
     renderSlides(layout.slidePositions, layout.connectorData);
 
-    updateTimelineView(0); // No animation for initial focus
+    // Set initial view to be centered and scaled down
+    updateTimelineView(0); // Initial focus with no animation
   }
 
   initializeTimeline();
@@ -222,7 +241,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  window.addEventListener('resize', initializeTimeline);
+  window.addEventListener('resize', () => {
+    initializeTimeline(); // Re-initialize on resize
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') {
+      document.getElementById('next').click();
+    }
+    if (e.key === 'ArrowLeft') {
+      document.getElementById('prev').click();
+    }
+  });
 
   console.log('Timeline initialized and event listeners attached.');
 });
