@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Our Team</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      background: #111;
+      color: #fff;
+      font-family: Arial, sans-serif;
+    }
+    .team-container {
+      width: 100vw;
+      height: 100vh;
+      max-width: 100vw;
+      max-height: 100vh;
+      margin: 0;
+      background: rgba(255,255,255,0.05);
+      border-radius: 0;
+      padding: 0;
+      box-shadow: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      overflow-x: hidden;
+    }
+    .team-title {
+      text-align: center;
+      margin-bottom: 32px;
+      font-size: 2.4em;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+    .team-list {
+      position: relative;
+      width: 100vw;
+      height: 90vh;
+      min-height: 600px;
+      max-width: 100vw;
+      max-height: 100vh;
+      margin: 0 auto;
+      display: block;
+      box-sizing: border-box;
+      overflow: visible;
+    }
+    .team-member {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      /* Each member will get a unique transform via inline style */
+    }
+    .team-member {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.10);
+      box-shadow: 0 4px 18px rgba(0,0,0,0.18);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.18s cubic-bezier(.38,1.15,.7,1.12), box-shadow 0.18s;
+      cursor: pointer;
+      z-index: 1;
+    }
+    .team-member:hover {
+      transform: scale(1.09);
+      box-shadow: 0 8px 28px rgba(138,43,226,0.22);
+      z-index: 2;
+    }
+    .team-avatar {
+      width: 78px;
+      height: 78px;
+      border-radius: 50%;
+      background: #222;
+      object-fit: cover;
+      border: 3px solid #8A2BE2;
+      margin-bottom: 8px;
+      margin-top: 6px;
+      transition: border 0.2s;
+    }
+    .team-member:hover .team-avatar {
+      border: 3px solid #fff;
+    }
+    .team-info {
+      text-align: center;
+    }
+    .team-name {
+      font-weight: bold;
+      font-size: 1.09em;
+      color: #fff;
+      margin-bottom: 1px;
+    }
+    .team-username {
+      font-size: 0.92em;
+      color: #ccc;
+      margin-bottom: 2px;
+    }
+    .team-skills {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 180px;
+      height: 180px;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .skill-bubble {
+      position: absolute;
+      background: #8A2BE2;
+      color: #fff;
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 0.89em;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      box-shadow: 0 2px 8px rgba(138,43,226,0.13);
+      transition: transform 0.18s cubic-bezier(.38,1.15,.7,1.12), box-shadow 0.18s;
+      white-space: nowrap;
+      opacity: 0.93;
+      pointer-events: auto;
+      border: 1.5px solid #fff2;
+    }
+    .team-member:hover .skill-bubble {
+      transform: scale(1.11);
+      box-shadow: 0 6px 18px rgba(138,43,226,0.22);
+      opacity: 1;
+    }
+    /* Position skill bubbles in a circle */
+    .skill-bubble:nth-child(1) { top: 10px; left: 50%; transform: translate(-50%, -50%); }
+    .skill-bubble:nth-child(2) { top: 50%; left: 10px; transform: translate(-50%, -50%); }
+    .skill-bubble:nth-child(3) { top: 50%; left: 170px; transform: translate(-50%, -50%); }
+    .skill-bubble:nth-child(4) { top: 170px; left: 50%; transform: translate(-50%, -50%); }
+    @media (max-width: 900px) {
+      .team-container { padding: 16px 2vw; }
+      .team-list { gap: 24px 8px; }
+      .team-member { width: 110px; height: 110px; }
+      .team-avatar { width: 56px; height: 56px; }
+      .team-skills { width: 130px; height: 130px; }
+    }
+    @media (max-width: 600px) {
+      .team-member { min-width: 80vw; max-width: 90vw; }
+      .team-list { gap: 16px 4px; }
+    }
+    @media (max-width: 900px) {
+      .team-container { padding: 16px 2vw; }
+      .team-list { gap: 16px 8px; }
+    }
+    @media (max-width: 600px) {
+      .team-member { min-width: 90vw; max-width: 98vw; }
+    }
+  </style>
+</head>
+<body>
+  <div class="team-container">
+    <div class="team-title">Our Team</div>
+    <div class="team-list">
+      <a class="team-member" href="https://github.com/AlexaJeressi" target="_blank" rel="noopener noreferrer"><img class="team-avatar" src="https://github.com/AlexaJeressi.png" alt="AlexaJ Martinez" /><div class="team-info"><div class="team-name">AlexaJ Martinez</div><div class="team-username">AlexaJeressi</div></div><div class="team-skills"><span class="skill-bubble">JavaScript</span><span class="skill-bubble">React</span><span class="skill-bubble">UI Design</span></div></a>
+      <a class="team-member" href="https://github.com/anmolmanchanda" target="_blank" rel="noopener noreferrer"><img class="team-avatar" src="https://github.com/anmolmanchanda.png" alt="Anmol Manchanda" /><div class="team-info"><div class="team-name">Anmol Manchanda</div><div class="team-username">anmolmanchanda</div></div><div class="team-skills"><span class="skill-bubble">Python</span><span class="skill-bubble">Machine Learning</span><span class="skill-bubble">APIs</span></div></a>
+      <a class="team-member" href="https://github.com/Connie0126" target="_blank" rel="noopener noreferrer"><img class="team-avatar" src="https://github.com/Connie0126.png" alt="Connie0126" /><div class="team-info"><div class="team-name">Connie0126</div><div class="team-username">Connie0126</div></div><div class="team-skills"><span class="skill-bubble">HTML</span><span class="skill-bubble">CSS</span><span class="skill-bubble">Accessibility</span></div></a>
+      <a class="team-member" href="https://github.com/dawashz" target="_blank" rel="noopener noreferrer"><img class="team-avatar" src="https://github.com/dawashz.png" alt="dawashz" /><div class="team-info"><div class="team-name">dawashz</div><div class="team-username">dawashz</div></div><div class="team-skills"><span class="skill-bubble">DevOps</span><span class="skill-bubble">AWS</span><span class="skill-bubble">Docker</span></div></a>
+      <a class="team-member" href="https://github.com/diptobiswas" target="_blank" rel="noopener noreferrer"><img class="team-avatar" src="https://github.com/diptobiswas.png" alt="diptobiswas" /><div class="team-info"><div class="team-name">diptobiswas</div><div class="team-username">diptobiswas</div></div><div class="team-skills"><span class="skill-bubble">Java</span><span class="skill-bubble">Spring</span><span class="skill-bubble">SQL</span></div></a>
+      <a class="team-member" href="https://github.com/foudamo" target="_blank" rel="noopener noreferrer"><img class="team-avatar" src="https://github.com/foudamo.png" alt="Mohamed Fouda" /><div class="team-info"><div class="team-name">Mohamed Fouda</div><div class="team-username">foudamo</div></div><div class="team-skills"><span class="skill-bubble">Full Stack</span><span class="skill-bubble">TypeScript</span><span class="skill-bubble">Cloud</span></div></a>
+      <a class="team-member" href="https://github.com/GonzoDevRando" target="_blank" rel="noopener noreferrer"><img class="team-avatar" src="https://github.com/GonzoDevRando.png" alt="GonzoDevRando" /><div class="team-info"><div class="team-name">GonzoDevRando</div><div class="team-username">GonzoDevRando</div></div><div class="team-skills"><span class="skill-bubble">Game Dev</span><span class="skill-bubble">Unity</span><span class="skill-bubble">C#</span></div></a>
+      <a class="team-member" href="https://github.com/GuruprasannaRS" target="_blank" rel="noopener noreferrer"><img class="team-avatar" src="https://github.com/GuruprasannaRS.png" alt="GURUPRASANNA" /><div class="team-info"><div class="team-name">GURUPRASANNA</div><div class="team-username">GuruprasannaRS</div></div><div class="team-skills"><span class="skill-bubble">Backend</span><span class="skill-bubble">Node.js</span><span class="skill-bubble">MongoDB</span></div></a>
+      <a class="team-member" href="https://github.com/hargunmujral" target="_blank" rel="noopener noreferrer"><img class="team-avatar" src="https://github.com/hargunmujral.png" alt="Hargun Mujral" /><div class="team-info"><div class="team-name">Hargun Mujral</div><div class="team-username">hargunmujral</div></div><div class="team-skills"><span class="skill-bubble">Data Science</span><span class="skill-bubble">Pandas</span><span class="skill-bubble">Visualization</span></div></a>
+      <a class="team-member" href="https://github.com/ishutrivedi" target="_blank" rel="noopener noreferrer"><img class="team-avatar" src="https://github.com/ishutrivedi.png" alt="Ishu" /><div class="team-info"><div class="team-name">Ishu</div><div class="team-username">ishutrivedi</div></div><div class="team-skills"><span class="skill-bubble">Mobile</span><span class="skill-bubble">Flutter</span><span class="skill-bubble">UI/UX</span></div></a>
+      <a class="team-member" href="https://github.com/isobarbaric" target="_blank" rel="noopener noreferrer"><img class="team-avatar" src="https://github.com/isobarbaric.png" alt="Krish Shah" /><div class="team-info"><div class="team-name">Krish Shah</div><div class="team-username">isobarbaric</div></div><div class="team-skills"><span class="skill-bubble">Go</span><span class="skill-bubble">Kubernetes</span><span class="skill-bubble">APIs</span></div></a>
+      <a class="team-member" href="https://github.com/LiamRWatson" target="_blank" rel="noopener noreferrer"><img class="team-avatar" src="https://github.com/LiamRWatson.png" alt="LiamRWatson" /><div class="team-info"><div class="team-name">LiamRWatson</div><div class="team-username">LiamRWatson</div></div><div class="team-skills"><span class="skill-bubble">JavaScript</span><span class="skill-bubble">Vue.js</span><span class="skill-bubble">Testing</span></div></a>
+      <a class="team-member" href="https://github.com/linhvk164" target="_blank" rel="noopener noreferrer"><img class="team-avatar" src="https://github.com/linhvk164.png" alt="Linh" /><div class="team-info"><div class="team-name">Linh</div><div class="team-username">linhvk164</div></div><div class="team-skills"><span class="skill-bubble">Python</span><span class="skill-bubble">Flask</span><span class="skill-bubble">APIs</span></div></a>
+      <a class="team-member" href="https://github.com/main-salman" target="_blank" rel="noopener noreferrer"><img class="team-avatar" src="https://github.com/main-salman.png" alt="Salman Naqvi" /><div class="team-info"><div class="team-name">Salman Naqvi</div><div class="team-username">main-salman</div></div><div class="team-skills"><span class="skill-bubble">React</span><span class="skill-bubble">Node.js</span><span class="skill-bubble">Cloud</span></div></a>
+      <a class="team-member" href="https://github.com/mmz2dang" target="_blank" rel="noopener noreferrer"><img class="team-avatar" src="https://github.com/mmz2dang.png" alt="Mei" /><div class="team-info"><div class="team-name">Mei</div><div class="team-username">mmz2dang</div></div><div class="team-skills"><span class="skill-bubble">WebGL</span><span class="skill-bubble">3D</span><span class="skill-bubble">Animation</span></div></a>
+      <a class="team-member" href="https://github.com/Mohammed-Baig" target="_blank" rel="noopener noreferrer"><img class="team-avatar" src="https://github.com/Mohammed-Baig.png" alt="M0hamm3d 8a19" /><div class="team-info"><div class="team-name">M0hamm3d 8a19</div><div class="team-username">Mohammed-Baig</div></div><div class="team-skills"><span class="skill-bubble">DevOps</span><span class="skill-bubble">Linux</span><span class="skill-bubble">Bash</span></div></a>
+      <a class="team-member" href="https://github.com/zrwaite" target="_blank" rel="noopener noreferrer"><img class="team-avatar" src="https://github.com/zrwaite.png" alt="Zac Waite" /><div class="team-info"><div class="team-name">Zac Waite</div><div class="team-username">zrwaite</div></div><div class="team-skills"><span class="skill-bubble">Leadership</span><span class="skill-bubble">Strategy</span><span class="skill-bubble">Mentorship</span></div></a>
+
+    </div>
+  </div>
+  <script>
+    (function() {
+      const members = document.querySelectorAll('.team-member');
+      if (!members.length) return;
+      const centerIdx = 0;
+      const total = members.length;
+      function arrangeCluster() {
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        // radii for circles, responsive
+        const r1 = Math.min(w, h) * 0.32;
+        const r2 = Math.min(w, h) * 0.48;
+        // Center the first member
+        members[centerIdx].style.transform = 'translate(-50%, -50%)';
+        // Place next 8 in a circle
+        for (let i = 1; i <= 8 && i < total; ++i) {
+          const angle = (2 * Math.PI * (i - 1)) / 8 - Math.PI / 2;
+          const x = Math.cos(angle) * r1;
+          const y = Math.sin(angle) * r1;
+          members[i].style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px)`;
+        }
+        // Place next 8 in a larger circle
+        for (let i = 9; i < total; ++i) {
+          const angle = (2 * Math.PI * (i - 9)) / 8 - Math.PI / 2;
+          const x = Math.cos(angle) * r2;
+          const y = Math.sin(angle) * r2;
+          members[i].style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px)`;
+        }
+      }
+      arrangeCluster();
+      window.addEventListener('resize', arrangeCluster);
+    })();
+  </script>
+</body>
+</html>

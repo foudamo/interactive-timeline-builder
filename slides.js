@@ -119,9 +119,15 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- UI Update Functions ---
 
   function highlightSlide(index) {
-    document.querySelectorAll('.slide').forEach(slide => slide.classList.remove('active'));
-    const activeSlide = document.querySelector(`.slide[data-index='${index}']`);
-    if (activeSlide) activeSlide.classList.add('active');
+    document.querySelectorAll('.slide').forEach((slide, i) => {
+      slide.classList.toggle('active', i === index);
+      // Restore default opacity logic: active slide fully opaque, others lower
+      if (i === index) {
+        slide.style.opacity = '1';
+      } else {
+        slide.style.opacity = '';
+      }
+    });
   }
 
   function animatePath() {
@@ -244,6 +250,54 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('resize', () => {
     initializeTimeline(); // Re-initialize on resize
   });
+
+  // Zoom Out Button Logic
+  document.getElementById('zoom-out').addEventListener('click', () => {
+    zoomOutToFit();
+  });
+
+  function zoomOutToFit(duration = 800) {
+    // Calculate the true bounding box of all slides and milestones
+    const margin = 240;
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    // Include all milestones
+    layout.milestonePoints.forEach(point => {
+      if (point.x < minX) minX = point.x;
+      if (point.y < minY) minY = point.y;
+      if (point.x > maxX) maxX = point.x;
+      if (point.y > maxY) maxY = point.y;
+    });
+    // Include all slides (with their width/height)
+    const slideWidth = 140; // Should match actual slide width
+    const slideHeight = 200; // Should match actual slide height
+    layout.slidePositions.forEach(pos => {
+      if (pos.x < minX) minX = pos.x;
+      if (pos.y < minY) minY = pos.y;
+      if (pos.x + slideWidth > maxX) maxX = pos.x + slideWidth;
+      if (pos.y + slideHeight > maxY) maxY = pos.y + slideHeight;
+    });
+    minX -= margin; minY -= margin; maxX += margin; maxY += margin;
+    const bboxWidth = maxX - minX;
+    const bboxHeight = maxY - minY;
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+    const scaleX = screenWidth / bboxWidth;
+    const scaleY = screenHeight / bboxHeight;
+    const scale = Math.min(scaleX, scaleY);
+    // Center the bounding box in the viewport
+    const bboxCenterX = minX + bboxWidth / 2;
+    const bboxCenterY = minY + bboxHeight / 2;
+    const screenCenterX = screenWidth / 2;
+    const screenCenterY = screenHeight / 2;
+    const translateX = (screenCenterX / scale) - bboxCenterX;
+    const translateY = (screenCenterY / scale) - bboxCenterY;
+    container.style.transitionDuration = `${duration}ms`;
+    container.style.transform = `scale(${scale}) translate(${translateX}px, ${translateY}px)`;
+    // Set all slides to fully opaque when zoomed out
+    document.querySelectorAll('.slide').forEach(slide => {
+      slide.style.opacity = '1';
+    });
+  }
 
   window.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight') {

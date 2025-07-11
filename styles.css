@@ -74,6 +74,17 @@ body {
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 }
 
+#zoom-out {
+  /* Distinctive style for the zoom out button */
+  border: 1.5px solid #8A2BE2;
+}
+
+#zoom-out:hover {
+  background: rgba(138, 43, 226, 0.15);
+  box-shadow: 0 0 12px 2px rgba(138, 43, 226, 0.4), 0 4px 30px rgba(0, 0, 0, 0.1);
+  border-color: #1E90FF;
+}
+
 .controls button:hover {
   background: rgba(255, 255, 255, 0.2);
   transform: scale(1.05);
@@ -123,16 +134,18 @@ body {
 .slide {
   position: absolute;
   color: #fff;
-  padding: 40px;
+  padding: 30px;
   border-radius: 8px;
-  width: 140px;
-  min-height: 200px;
+  width: 240px;
+  min-height: 150px;
   /*background-color: #000;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);*/
   z-index: 10;
   transition: all 0.3s ease;
   overflow: visible;
   box-sizing: content-box;
+  opacity: 0.1; /* Default opacity for non-active slides */
+  font-size: 0.75em;
 }
 
 .slide img {
@@ -184,15 +197,21 @@ body {
   .slide {
     padding: 20px; /* Reduced padding */
     width: 120px; /* Match JS */
-    min-height: 180px; /* Match JS */
   }
 
   .slide h2 {
-    font-size: 1.1em;
+    font-size: 1.5em;
+    margin: 0 0 15px 0;
+    color: #fff;
+    letter-spacing: 0.02em;
+    font-weight: 700;
+    line-height: 1.1;
   }
 
   .slide p {
-    font-size: 0.9em;
+    margin: 0;
+    font-size: 1.125em;
+    color: rgba(255, 255, 255, 0.8);
   }
 }
 
@@ -213,16 +232,10 @@ body {
 
 .slide h3 {
   margin: 0 0 5px;
-  font-size: 0.9em;
+  font-size: 0.45em;
   color: #fff;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
   padding-bottom: 10px;
-}
-
-.slide p {
-  margin: 0;
-  font-size: 0.7em;
-  color: rgba(255, 255, 255, 0.8);
 }
 
 .slide img {

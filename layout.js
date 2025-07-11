@@ -151,7 +151,7 @@ function calculateLayout(eventCount, containerWidth, containerHeight, slideWidth
     }
 
     placedSlides.push(finalPosition);
-    slidePositions.push({ x: finalPosition.x, y: finalPosition.y });
+    slidePositions.push({ x: finalPosition.x, y: finalPosition.y - 50 });
 
     const connectionPointX = Math.max(finalPosition.x, Math.min(point.x, finalPosition.x + slideWidth));
     const connectionPointY = Math.max(finalPosition.y, Math.min(point.y, finalPosition.y + slideHeight));
