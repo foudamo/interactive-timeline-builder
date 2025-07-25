@@ -8,14 +8,17 @@ body {
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
-  background: #111;
-  color: #fff;
+  background: var(--bg-color, #111);
+  color: var(--text-primary, #fff);
   height: 100vh;
   width: 100vw;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  border: none;
+  outline: none;
+  box-shadow: none;
 }
 
 /* Responsive Container */
@@ -29,8 +32,14 @@ body {
   position: relative;
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
-  background-color: #000;
+  overflow: hidden; /* Revert to hidden as requested */
+  background-color: var(--bg-color, #000);
+  border: none;
+  outline: none;
+  box-shadow: none;
+  /* Improve 3D transform rendering */
+  perspective: 1000px;
+  transform-style: preserve-3d;
 }
 
 #timeline-container {
@@ -40,10 +49,53 @@ body {
   left: 0;
   top: 0;
   transform-origin: 0 0; /* Scale from the top-left corner */
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  background-color: transparent;
+  border: none;
+  outline: none;
+  box-shadow: none;
   transition: transform 1.2s cubic-bezier(0.18, 0.89, 0.32, 1.05);
+  /* Create bleeding effect to hide container edges */
+  overflow: visible;
+  /* Fix pixelation during transforms */
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* SVG Timeline Path Styling */
+#timeline-path {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+#path-line {
+  fill: none;
+  stroke: url(#timeline-gradient);
+  stroke-width: var(--path-width, 20px);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: var(--path-glow, none);
+  transition: stroke-dasharray 0.3s ease;
+}
+
+/* Add a pseudo-element to extend background beyond container edges */
+#timeline-container::before {
+  content: '';
+  position: absolute;
+  top: -100px;
+  left: -100px;
+  right: -100px;
+  bottom: -100px;
+  background-color: var(--bg-color, #111);
+  z-index: -1;
+  pointer-events: none;
 }
 
 .controls {
@@ -57,11 +109,11 @@ body {
 }
 
 .controls button {
-  width: 60px;
-  height: 60px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #fff;
+  width: var(--control-size, 60px);
+  height: var(--control-size, 60px);
+  background: var(--controls-bg, rgba(255, 255, 255, 0.1));
+  border: 1px solid var(--controls-border, rgba(255, 255, 255, 0.2));
+  color: var(--text-primary, #fff);
   border-radius: 50%;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -69,24 +121,24 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: var(--controls-backdrop, blur(10px));
+  -webkit-backdrop-filter: var(--controls-backdrop, blur(10px));
+  box-shadow: var(--controls-shadow, 0 4px 30px rgba(0, 0, 0, 0.1));
 }
 
 #zoom-out {
   /* Distinctive style for the zoom out button */
-  border: 1.5px solid #8A2BE2;
+  border: 1.5px solid var(--zoom-out-border, #8A2BE2);
 }
 
 #zoom-out:hover {
-  background: rgba(138, 43, 226, 0.15);
-  box-shadow: 0 0 12px 2px rgba(138, 43, 226, 0.4), 0 4px 30px rgba(0, 0, 0, 0.1);
-  border-color: #1E90FF;
+  background: var(--zoom-out-hover, rgba(138, 43, 226, 0.15));
+  box-shadow: 0 0 12px 2px var(--zoom-out-border, rgba(138, 43, 226, 0.4)), var(--controls-shadow, 0 4px 30px rgba(0, 0, 0, 0.1));
+  border-color: var(--zoom-out-border, #1E90FF);
 }
 
 .controls button:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--controls-hover, rgba(255, 255, 255, 0.2));
   transform: scale(1.05);
 }
 
@@ -107,10 +159,10 @@ body {
 
 #path-line {
   stroke: url(#timeline-gradient);
-  stroke-width: 20px;
+  stroke-width: var(--path-width, 20px);
   fill: none;
   stroke-linecap: round;
-  filter: drop-shadow(0 0 12px rgba(100, 100, 255, 0.5));
+  filter: var(--path-glow, drop-shadow(0 0 12px rgba(100, 100, 255, 0.5)));
   stroke-dasharray: 10000;
   stroke-dashoffset: 10000;
   animation: drawPath 2s ease-out forwards;
@@ -133,19 +185,26 @@ body {
 
 .slide {
   position: absolute;
-  color: #fff;
+  color: var(--text-primary, #fff);
   padding: 30px;
   border-radius: 8px;
   width: 240px;
   min-height: 150px;
+  max-height: 70vh; /* Limit height to viewport */
   /*background-color: #000;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);*/
   z-index: 10;
   transition: all 0.3s ease;
-  overflow: visible;
+  overflow-y: auto; /* Enable vertical scrolling */
   box-sizing: content-box;
-  opacity: 0.1; /* Default opacity for non-active slides */
+  opacity: var(--slide-opacity, 0.1); /* Default opacity for non-active slides */
   font-size: 0.75em;
+  /* Fix pixelation during transforms */
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 .slide img {
@@ -168,7 +227,7 @@ body {
 /* --- Responsive Design --- */
 @media (max-width: 768px) {
   body {
-    font-size: 14px;
+    font-size: 12px;
   }
 
   .title-container h1 {
@@ -180,38 +239,65 @@ body {
   }
 
   .controls {
-    bottom: 25px;
-    gap: 10px;
+    bottom: 15px;
+    gap: 8px;
   }
 
   .controls button {
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
   }
 
   .controls button svg {
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
   }
 
   .slide {
-    padding: 20px; /* Reduced padding */
-    width: 120px; /* Match JS */
+    padding: 15px; /* Further reduced padding */
+    width: 140px; /* Slightly wider for better readability */
+    font-size: 0.85em; /* Slightly larger text */
+    min-height: 120px; /* Reduced minimum height */
   }
 
   .slide h2 {
-    font-size: 1.5em;
-    margin: 0 0 15px 0;
+    font-size: 1.3em;
+    margin: 0 0 10px 0;
     color: #fff;
     letter-spacing: 0.02em;
     font-weight: 700;
     line-height: 1.1;
   }
 
+  .slide h3 {
+    font-size: 0.5em;
+    margin: 0 0 8px;
+    padding-bottom: 8px;
+  }
+
   .slide p {
     margin: 0;
-    font-size: 1.125em;
+    font-size: 1em;
     color: rgba(255, 255, 255, 0.8);
+    line-height: 1.3;
+  }
+}
+
+/* Additional mobile portrait adjustments */
+@media (max-width: 480px) and (orientation: portrait) {
+  .slide {
+    width: 160px; /* Even wider for portrait */
+    padding: 18px;
+    font-size: 0.9em;
+  }
+  
+  .slide h2 {
+    font-size: 1.4em;
+    margin-bottom: 12px;
+  }
+  
+  .controls {
+    bottom: 20px;
   }
 }
 
@@ -226,7 +312,7 @@ body {
 }
 
 .slide.active {
-  opacity: 1;
+  opacity: var(--slide-active-opacity, 1);
   z-index: 10;
 }
 
@@ -250,15 +336,15 @@ body {
 }
 
 .milestone {
-  width: 24px;
-  height: 24px;
+  width: var(--milestone-size, 24px);
+  height: var(--milestone-size, 24px);
   background: #fff;
   border-radius: 50%;
   position: absolute;
   transform: translate(-50%, -50%);
   z-index: 8;
   cursor: pointer;
-  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.3), 0 0 10px rgba(255, 255, 255, 0.5);
+  box-shadow: var(--milestone-glow, 0 0 0 4px rgba(255, 255, 255, 0.3), 0 0 10px rgba(255, 255, 255, 0.5));
   transition: all 0.3s ease;
   border: 2px solid rgba(255, 255, 255, 0.8);
 }
@@ -269,10 +355,10 @@ body {
 }
 
 .milestone.active-marker {
-  width: 32px;
-  height: 32px;
-  background: #8A2BE2;
-  box-shadow: 0 0 0 6px rgba(138, 43, 226, 0.4), 0 0 20px rgba(138, 43, 226, 0.8);
+  width: var(--active-milestone-size, 32px);
+  height: var(--active-milestone-size, 32px);
+  background: var(--active-milestone-color, #8A2BE2);
+  box-shadow: var(--active-milestone-glow, 0 0 0 6px rgba(138, 43, 226, 0.4), 0 0 20px rgba(138, 43, 226, 0.8));
   z-index: 9;
 }
 

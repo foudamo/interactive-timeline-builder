@@ -121,6 +121,10 @@ function calculateLayout(eventCount, containerWidth, containerHeight, slideWidth
     let direction = 0;
     let searchX = point.x;
     let searchY = point.y;
+    
+    // Determine if this is a peak or trough based on path generation logic
+    const isPeak = index % 2 === 0; // Even indices are peaks (higher positions)
+    const isTrough = !isPeak; // Odd indices are troughs (lower positions)
 
     for (let i = 0; i < 500; i++) {
       const rect = { x: searchX - slideWidth / 2, y: searchY - slideHeight / 2, width: slideWidth, height: slideHeight };
@@ -151,7 +155,15 @@ function calculateLayout(eventCount, containerWidth, containerHeight, slideWidth
     }
 
     placedSlides.push(finalPosition);
-    slidePositions.push({ x: finalPosition.x, y: finalPosition.y - 50 });
+    
+    // Adjust slide position based on peak/trough
+    let adjustedY = finalPosition.y - 50; // Default adjustment
+    if (isTrough) {
+      // For troughs, lower the slide position much further
+      adjustedY = finalPosition.y + 80; // Position well below the trough dot
+    }
+    
+    slidePositions.push({ x: finalPosition.x, y: adjustedY });
 
     const connectionPointX = Math.max(finalPosition.x, Math.min(point.x, finalPosition.x + slideWidth));
     const connectionPointY = Math.max(finalPosition.y, Math.min(point.y, finalPosition.y + slideHeight));

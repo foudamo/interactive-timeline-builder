@@ -1,0 +1,95 @@
+{
+  "currentTheme": "cosmic",
+  "themes": {
+    "cosmic": {
+      "name": "Cosmic Dark",
+      "description": "Purple and blue cosmic theme with glowing effects",
+      "colors": {
+        "background": "#111",
+        "containerBackground": "transparent",
+        "textPrimary": "#fff",
+        "textSecondary": "rgba(255, 255, 255, 0.8)",
+        "pathGradient": {
+          "start": "#8A2BE2",
+          "middle": "#1E90FF",
+          "end": "#FF69B4"
+        },
+        "milestones": [
+          "#8A2BE2",
+          "#1E90FF",
+          "#00CED1",
+          "#9370DB",
+          "#FF69B4"
+        ],
+        "activeMilestone": "#8A2BE2",
+        "controls": {
+          "background": "rgba(255, 255, 255, 0.1)",
+          "border": "rgba(255, 255, 255, 0.2)",
+          "hover": "rgba(255, 255, 255, 0.2)",
+          "zoomOutBorder": "#8A2BE2",
+          "zoomOutHover": "rgba(138, 43, 226, 0.15)"
+        }
+      },
+      "effects": {
+        "pathGlow": "drop-shadow(0 0 12px rgba(100, 100, 255, 0.5))",
+        "milestoneGlow": "0 0 0 4px rgba(255, 255, 255, 0.3), 0 0 10px rgba(255, 255, 255, 0.5)",
+        "activeMilestoneGlow": "0 0 0 6px rgba(138, 43, 226, 0.4), 0 0 20px rgba(138, 43, 226, 0.8)",
+        "controlsBackdrop": "blur(10px)",
+        "controlsShadow": "0 4px 30px rgba(0, 0, 0, 0.1)"
+      },
+      "dimensions": {
+        "pathWidth": 20,
+        "milestoneSize": 24,
+        "activeMilestoneSize": 32,
+        "controlSize": 60,
+        "slideOpacity": 0.1,
+        "slideActiveOpacity": 1
+      }
+    },
+    "minimal": {
+      "name": "Minimal Light",
+      "description": "Clean, minimal theme with subtle colors",
+      "colors": {
+        "background": "#f5f5f5",
+        "containerBackground": "transparent",
+        "textPrimary": "#333",
+        "textSecondary": "rgba(51, 51, 51, 0.7)",
+        "pathGradient": {
+          "start": "#666",
+          "middle": "#888",
+          "end": "#666"
+        },
+        "milestones": [
+          "#4A90E2",
+          "#7ED321",
+          "#F5A623",
+          "#D0021B",
+          "#9013FE"
+        ],
+        "activeMilestone": "#4A90E2",
+        "controls": {
+          "background": "rgba(255, 255, 255, 0.9)",
+          "border": "rgba(0, 0, 0, 0.1)",
+          "hover": "rgba(0, 0, 0, 0.05)",
+          "zoomOutBorder": "#4A90E2",
+          "zoomOutHover": "rgba(74, 144, 226, 0.1)"
+        }
+      },
+      "effects": {
+        "pathGlow": "none",
+        "milestoneGlow": "0 2px 8px rgba(0, 0, 0, 0.1)",
+        "activeMilestoneGlow": "0 4px 16px rgba(74, 144, 226, 0.3)",
+        "controlsBackdrop": "blur(5px)",
+        "controlsShadow": "0 2px 20px rgba(0, 0, 0, 0.1)"
+      },
+      "dimensions": {
+        "pathWidth": 16,
+        "milestoneSize": 20,
+        "activeMilestoneSize": 28,
+        "controlSize": 50,
+        "slideOpacity": 0.2,
+        "slideActiveOpacity": 1
+      }
+    }
+  }
+}
