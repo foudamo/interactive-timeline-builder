@@ -186,7 +186,6 @@ body {
 .slide {
   position: absolute;
   color: var(--text-primary, #fff);
-  padding: 30px;
   border-radius: 8px;
   width: 240px;
   min-height: 150px;

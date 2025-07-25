@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Timeline Position Settings</title>
+  <title>Timeline Settings</title>
   <style>
     * {
       margin: 0;
@@ -24,7 +24,7 @@
     }
 
     .header h1 {
-      color: #8A2BE2;
+      color: #6B7280;
       margin-bottom: 10px;
     }
 
@@ -53,16 +53,14 @@
     }
 
     .milestone {
-      width: 12px;
-      height: 12px;
-      background: #8A2BE2;
+      width: 24px;
+      height: 24px;
+      background: #fff;
       border-radius: 50%;
       position: absolute;
       cursor: move;
       z-index: 10;
       transform: translate(-50%, -50%);
-      border: 2px solid #fff;
-      box-shadow: 0 0 8px rgba(138, 43, 226, 0.6);
     }
 
     .milestone:hover {
@@ -70,52 +68,52 @@
     }
 
     .slide {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid #8A2BE2;
-      border-radius: 4px;
       position: absolute;
-      cursor: move;
-      z-index: 8;
-      font-size: 8px;
       color: #fff;
-      text-align: left;
-      padding: 8px;
+      border-radius: 8px;
+      z-index: 8;
+      transition: all 0.3s ease;
+      overflow: hidden;
       box-sizing: border-box;
-      min-width: 100px;
-      min-height: 60px;
-      /* No overflow hidden - let content determine size */
+      cursor: move;
+      background: rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
     
     .slide h3 {
-      margin: 0 0 6px 0;
-      font-size: 9px;
+      margin: 0 0 5px;
+      font-size: 14px;
       font-weight: bold;
-      color: #8A2BE2;
-      line-height: 1.2;
+      color: #fff;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     }
     
     .slide p {
-      margin: 0 0 6px 0;
-      font-size: 7px;
+      margin: 0;
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.8);
       line-height: 1.2;
-      opacity: 0.9;
     }
     
     .slide .image-placeholder {
       width: 100%;
-      height: 25px;
-      background: rgba(138, 43, 226, 0.3);
-      border-radius: 2px;
+      height: 80px;
+      background: rgba(107, 114, 128, 0.2);
+      border: 1px dashed rgba(107, 114, 128, 0.5);
+      border-radius: 4px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 6px;
-      margin-top: 4px;
-      flex-shrink: 0;
+      font-size: 10px;
+      color: #6B7280;
+      margin-top: 8px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .slide:hover {
-      background: rgba(138, 43, 226, 0.2);
+      background: rgba(107, 114, 128, 0.2);
     }
 
     .timeline-path {
@@ -128,12 +126,22 @@
       z-index: 5;
     }
 
+    .connectors-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 4;
+    }
+
     .path-line {
-      stroke: #8A2BE2;
+      stroke: #6B7280;
       stroke-width: 3;
       fill: none;
       stroke-linecap: round;
-      filter: drop-shadow(0 0 4px rgba(138, 43, 226, 0.5));
+      filter: drop-shadow(0 0 4px rgba(107, 114, 128, 0.5));
     }
 
     .controls {
@@ -146,7 +154,7 @@
     }
 
     .btn {
-      background: #8A2BE2;
+      background: #6B7280;
       color: white;
       border: none;
       padding: 12px 24px;
@@ -173,8 +181,8 @@
       max-width: 1200px;
       margin: 20px auto;
       padding: 15px;
-      background: rgba(138, 43, 226, 0.1);
-      border: 1px solid #8A2BE2;
+      background: rgba(107, 114, 128, 0.1);
+      border: 1px solid #6B7280;
       border-radius: 6px;
       font-size: 14px;
       line-height: 1.5;
@@ -203,9 +211,8 @@
       margin: 2% auto;
       border-radius: 12px;
       width: 90%;
-      max-width: 900px;
+      max-width: 60%;
       max-height: 90vh;
-      overflow-y: auto;
       border: 1px solid #444;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
@@ -231,7 +238,7 @@
     }
 
     .close:hover {
-      color: #8A2BE2;
+      color: #6B7280;
     }
 
     .templates-grid {
@@ -242,10 +249,7 @@
     }
 
     .template-item {
-      background: #333;
-      border-radius: 8px;
       padding: 15px;
-      border-left: 4px solid #8A2BE2;
       transition: all 0.3s ease;
       display: flex;
       flex-direction: column;
@@ -258,8 +262,6 @@
       align-items: center;
       height: 120px;
       background: #2a2a2a;
-      border-radius: 6px;
-      padding: 15px;
     }
 
     .shape-preview {
@@ -272,11 +274,11 @@
     .template-item:hover {
       background: #3a3a3a;
       transform: translateY(-2px);
-      box-shadow: 0 4px 15px rgba(138, 43, 226, 0.2);
+      box-shadow: 0 4px 15px rgba(107, 114, 128, 0.2);
     }
 
     .template-name {
-      color: #8A2BE2;
+      color: #6B7280;
       font-weight: bold;
       font-size: 16px;
       margin-bottom: 8px;
@@ -300,7 +302,7 @@
 
     .mini-template:hover {
       background: #3a3a3a;
-      border-color: #8A2BE2;
+      border-color: #6B7280;
       transform: scale(1.05);
     }
 
@@ -309,142 +311,315 @@
       height: 100%;
     }
 
-    /* Responsive design for settings row */
-    @media (max-width: 768px) {
-      .settings-row {
+    /* Info button styles */
+    .info-button {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(107, 114, 128, 0.8);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      color: #fff;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .info-button:hover {
+      background: rgba(107, 114, 128, 1);
+      border-color: rgba(255, 255, 255, 0.6);
+      transform: scale(1.1);
+      box-shadow: 0 4px 15px rgba(107, 114, 128, 0.4);
+    }
+
+    /* Tab navigation styles */
+    .tab-navigation {
+      display: table;
+      border-bottom: 2px solid #333;
+      margin-bottom: 20px;
+    }
+
+    .tab-button {
+      background: #333;
+      color: #bbb;
+      border: none;
+      padding: 12px 20px;
+      cursor: pointer;
+      border-radius: 6px 6px 0 0;
+      margin-right: 5px;
+      transition: all 0.3s ease;
+      font-size: 14px;
+    }
+
+    .tab-button:hover {
+      background: #444;
+      color: #fff;
+    }
+
+    .tab-button.active {
+      background: #6B7280;
+      color: #fff;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Event editor styles */
+    .event-list {
+      margin-bottom: 20px;
+    }
+
+    .event-item {
+      background: #333;
+      border-radius: 6px;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-left: 4px solid #6B7280;
+    }
+
+    .event-input {
+      width: 100%;
+      padding: 8px;
+      background: #222;
+      color: #fff;
+      border: 1px solid #555;
+      border-radius: 4px;
+      margin-bottom: 8px;
+      font-size: 12px;
+    }
+
+    .event-textarea {
+      width: 100%;
+      padding: 8px;
+      background: #222;
+      color: #fff;
+      border: 1px solid #555;
+      border-radius: 4px;
+      margin-bottom: 8px;
+      font-size: 12px;
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    /* Responsive design for main layout */
+    @media (max-width: 1024px) {
+      .main-layout {
         grid-template-columns: 1fr !important;
-        gap: 20px !important;
+        height: auto !important;
+      }
+      .theme-section {
+        max-height: 400px;
+      }
+      
+      .tab-navigation {
+        flex-wrap: wrap;
+        justify-content: center;
       }
     }
   </style>
 </head>
 <body>
   <div class="header">
-    <h1>Timeline Position Settings</h1>
-    <p>Drag and drop elements to customize their positions on the 16:9 virtual canvas</p>
+    <h1>Timeline Settings</h1>
+    <button class="btn secondary" onclick="downloadSVG()" style="position: absolute; top: 20px; right: 20px;">
+      📥 Download SVG for Figma
+    </button>
   </div>
 
-  <div id="template-info" style="text-align: center; margin: 10px 0; padding: 8px; background: rgba(138, 43, 226, 0.1); border-radius: 6px; border-left: 4px solid #8A2BE2;">
-    <strong style="color: #8A2BE2;">Current Template:</strong> 
-    <span id="template-name" style="color: #fff; font-weight: normal;">Loading...</span>
+  <!-- Tab Navigation -->
+  <div class="tab-navigation" style="max-width: 1200px; margin: 0 auto;">
+    <button class="tab-button active" onclick="switchTab('themeAndPath')">🎨 Theme & Path</button>
+    <button class="tab-button" onclick="switchTab('events')">📝 Events</button>
   </div>
 
-  <div class="canvas-container">
-    <div class="virtual-canvas" id="canvas">
-      <svg class="timeline-path" id="timelinePath">
-        <path class="path-line" id="pathLine" d=""></path>
-      </svg>
+  <!-- Theme and Path Tab Content -->
+  <div id="themeAndPath-tab" class="tab-content active">
+    <!-- Main two-column layout -->
+    <div class="main-layout" style="display: grid; grid-template-columns: 400px 1fr; gap: 30px; margin-top: 20px; height: calc(100vh - 200px);">
+      
+      <!-- Left Side: Theme Settings -->
+      <div class="theme-section" style="padding: 20px; background: #222; border-radius: 8px; overflow-y: auto;">
+        <h3 style="color: #6B7280; margin-bottom: 15px;">🎨 Theme Settings</h3>
+        <div class="theme-controls" style="margin-bottom: 20px;">
+          <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 15px;">
+            <label style="color: #fff;">Current Theme:</label>
+            <select id="theme-selector" onchange="switchTheme()" style="padding: 8px; background: #333; color: #fff; border: 1px solid #555; border-radius: 4px; flex: 1;">
+              <option value="cosmic">Cosmic Dark</option>
+              <option value="minimal">Minimal Light</option>
+            </select>
+          </div>
+        </div>
+        <div id="theme-preview" style="padding: 15px; background: #111; border-radius: 6px;">
+          <div id="theme-info">
+            <strong>Cosmic Dark</strong><br>
+            <small style="color: #bbb;">Neutral gray theme with subtle effects</small>
+          </div>
+          
+          <!-- Visual Theme Preview -->
+          <div id="theme-visual-preview" style="margin-top: 15px; padding: 12px; background: #111; border-radius: 4px; position: relative;">
+            <div style="color: #999; font-size: 11px; margin-bottom: 8px;">Preview:</div>
+            <div style="padding: 10px; background: #111; border-radius: 4px; border: 1px solid #333;">
+              <svg width="100%" height="60" viewBox="0 0 120 60" style="display: block;">
+                <defs>
+                  <filter id="pathGlow">
+                    <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                    <feMerge> 
+                      <feMergeNode in="coloredBlur"/>
+                      <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                  </filter>
+                </defs>
+                <!-- Connector lines -->
+                <line id="connector-1" x1="20" y1="45" x2="10" y2="20" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+                <line id="connector-2" x1="50" y1="45" x2="50" y2="20" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+                <line id="connector-3" x1="100" y1="45" x2="90" y2="20" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+                
+                <!-- Timeline path -->
+                <path id="preview-path" d="M 10 20 Q 30 12 50 20 Q 70 28 90 20" stroke="#6B7280" stroke-width="3" fill="none" filter="url(#pathGlow)"/>
+                
+                <!-- Milestone circles -->
+                <circle id="preview-circle-1" cx="10" cy="20" r="4" fill="#6B7280" stroke="#fff" stroke-width="1.5"/>
+                <circle id="preview-circle-2" cx="50" cy="20" r="4" fill="#6B7280" stroke="#fff" stroke-width="1.5"/>
+                <circle id="preview-circle-3" cx="90" cy="20" r="4" fill="#6B7280" stroke="#fff" stroke-width="1.5"/>
+                
+                <!-- Mini slide previews -->
+                <rect id="preview-slide-1" x="5" y="42" width="30" height="12" fill="rgba(255,255,255,0.1)" stroke="#6B7280" stroke-width="1" rx="2"/>
+                <rect id="preview-slide-2" x="35" y="42" width="30" height="12" fill="rgba(255,255,255,0.1)" stroke="#6B7280" stroke-width="1" rx="2"/>
+                <rect id="preview-slide-3" x="85" y="42" width="30" height="12" fill="rgba(255,255,255,0.1)" stroke="#6B7280" stroke-width="1" rx="2"/>
+                
+                <!-- Mini text in slides -->
+                <text x="20" y="50" text-anchor="middle" fill="#fff" font-size="6">Event</text>
+                <text x="50" y="50" text-anchor="middle" fill="#fff" font-size="6">Event</text>
+                <text x="100" y="50" text-anchor="middle" fill="#fff" font-size="6">Event</text>
+              </svg>
+            </div>
+          </div>
+          
+          <!-- File Replacement Instructions -->
+          <div style="margin-top: 20px; padding: 12px; background: rgba(107, 114, 128, 0.1); border-radius: 4px; border: 1px solid rgba(107, 114, 128, 0.3);">
+            <div style="color: #6B7280; font-size: 12px; font-weight: bold; margin-bottom: 6px;">How to Apply Theme:</div>
+            <ol style="color: #bbb; font-size: 11px; line-height: 1.4; margin: 0; padding-left: 16px;">
+              <li>Click "Download Theme" to get theme.json</li>
+              <li>Replace the existing theme.json file in your project</li>
+              <li>Refresh your timeline to see the new theme</li>
+            </ol>
+          </div>
+        </div>
+                  <button class="btn secondary" onclick="downloadTheme()" style="width: 100%;">💾 Download Theme</button>
+
+      </div>
+      
+      <!-- Right Side: Canvas and Controls -->
+      <div style="display: flex; flex-direction: column; gap: 20px;">
+        
+        <div id="template-info" style="padding: 8px; background: rgba(107, 114, 128, 0.1); border-radius: 6px;">
+          <strong style="color: #6B7280;">Timeline Template:</strong> 
+          <span id="template-name" style="color: #fff; font-weight: normal;">Loading...</span>
+        </div>
+
+        <!-- Canvas Instructions -->
+        <div style="text-align: center; color: #bbb; font-size: 14px;">
+          Drag and drop elements to customize their positions on the 16:9 virtual canvas; or 
+          <div class="controls">
+            <button class="btn secondary" onclick="automaticallyGeneratePath()">⚡ Automatically Generate Path</button>
+          </div>
+        </div>
+
+        <div class="canvas-container" style="flex: 1; position: relative;">
+          <button class="info-button" onclick="showTemplatesModal()" title="View Available Templates">
+            i
+          </button>
+          <div class="virtual-canvas" id="canvas">
+            <svg class="timeline-path" id="timelinePath">
+              <path class="path-line" id="pathLine" d=""></path>
+            </svg>
+            <svg class="connectors-svg" id="connectorsOverlay">
+              <!-- Connector lines will be added here -->
+            </svg>
+          </div>
+        </div>
+
+        <!-- How to Use Instructions -->
+        <div style="padding: 15px; background: rgba(107, 114, 128, 0.1); border-radius: 6px; border: 1px solid rgba(107, 114, 128, 0.3);">
+          <div style="color: #6B7280; font-size: 14px; font-weight: bold; margin-bottom: 8px;">How to Use:</div>
+          <ul style="color: #bbb; font-size: 13px; line-height: 1.4; margin: 0; padding-left: 18px;">
+            <li>Gray circles are milestone points (timeline dots)</li>
+            <li>Rectangles are slide positions</li>
+            <li>Drag and drop elements to reposition them</li>
+            <li>The timeline path automatically updates as you move milestones</li>
+            <li>Click "Update Timeline" to download a new positions.json file</li>
+          </ul>
+        </div>
+
+        <div class="controls">
+          <button class="btn" onclick="updateTimeline()">💾 Download New Timeline</button>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="controls">
-    <button class="btn" onclick="updateTimeline()">🔄 Update Timeline</button>
-    <button class="btn secondary" onclick="automaticallyGeneratePath()">⚡ Automatically Generate Path</button>
-    <button class="btn secondary" onclick="previewTimeline()">👁️ Preview Timeline</button>
-  </div>
-  
-  <div class="settings-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 30px;">
-    <!-- Left Side: Theme Settings -->
-    <div class="theme-section" style="padding: 20px; background: #222; border-radius: 8px;">
-      <h3 style="color: #8A2BE2; margin-bottom: 15px;">🎨 Theme Settings</h3>
-      <div class="theme-controls" style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
-        <label style="color: #fff;">Current Theme:</label>
-        <select id="theme-selector" onchange="switchTheme()" style="padding: 8px; background: #333; color: #fff; border: 1px solid #555; border-radius: 4px;">
-          <option value="cosmic">Cosmic Dark</option>
-          <option value="minimal">Minimal Light</option>
-        </select>
-        <button class="btn secondary" onclick="applySelectedTheme()">✨ Apply Theme</button>
-        <button class="btn secondary" onclick="downloadTheme()">💾 Download Theme</button>
-      </div>
-      <div id="theme-preview" style="padding: 15px; background: #111; border-radius: 6px; border-left: 4px solid #8A2BE2;">
-        <div id="theme-info">
-          <strong>Cosmic Dark</strong><br>
-          <small style="color: #bbb;">Purple and blue cosmic theme with glowing effects</small>
-        </div>
-      </div>
+  <!-- Events Tab Content -->
+  <div id="events-tab" class="tab-content" style="max-width: 1200px; margin: 0 auto; padding: 20px;">
+    
+    <div id="events-list" class="event-list">
+      <!-- Events will be loaded here -->
+    </div>
+
+    <!-- Add Events button -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <button class="btn secondary" onclick="addNewEvent()">+ Add Event</button>
     </div>
     
-    <!-- Right Side: Templates Info -->
-    <div class="templates-section" style="padding: 20px; background: #222; border-radius: 8px;">
-      <h3 style="color: #8A2BE2; margin-bottom: 15px;">📐 Available Templates</h3>
-      <p style="color: #bbb; margin-bottom: 15px;">Quick preview of timeline patterns:</p>
-      
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 10px; max-height: 200px; overflow-y: auto;">
-        <div class="mini-template" onclick="showTemplatesModal()" title="Alternating Left Right">
-          <svg viewBox="0 0 40 30" class="mini-shape">
-            <path d="M 8 8 L 8 22" stroke="#8A2BE2" stroke-width="1" fill="none"/>
-            <circle cx="8" cy="8" r="1" fill="#8A2BE2"/>
-            <circle cx="8" cy="15" r="1" fill="#8A2BE2"/>
-            <circle cx="8" cy="22" r="1" fill="#8A2BE2"/>
-            <rect x="12" y="6" width="8" height="4" fill="none" stroke="#666" stroke-width="0.5"/>
-          </svg>
-        </div>
-        
-        <div class="mini-template" onclick="showTemplatesModal()" title="Diamond Rhombus">
-          <svg viewBox="0 0 40 30" class="mini-shape">
-            <path d="M 20 8 L 28 15 L 20 22 L 12 15 Z" stroke="#8A2BE2" stroke-width="1" fill="none"/>
-            <circle cx="20" cy="8" r="1" fill="#8A2BE2"/>
-            <circle cx="28" cy="15" r="1" fill="#8A2BE2"/>
-          </svg>
-        </div>
-        
-        <div class="mini-template" onclick="showTemplatesModal()" title="Heart Teardrop">
-          <svg viewBox="0 0 40 30" class="mini-shape">
-            <path d="M 20 10 Q 15 6 12 10 Q 10 13 12 16 Q 15 19 20 16 Q 25 13 20 10" stroke="#8A2BE2" stroke-width="1" fill="none"/>
-            <circle cx="20" cy="10" r="1" fill="#8A2BE2"/>
-            <circle cx="12" cy="13" r="1" fill="#8A2BE2"/>
-          </svg>
-        </div>
-        
-        <div class="mini-template" onclick="showTemplatesModal()" title="Star Asterisk">
-          <svg viewBox="0 0 40 30" class="mini-shape">
-            <path d="M 20 6 L 22 10 L 26 8 L 24 13 L 28 15 L 23 16 L 24 21 L 20 18 L 16 21 L 17 16 L 12 15 L 16 13 L 14 8 L 18 10 Z" stroke="#8A2BE2" stroke-width="1" fill="none"/>
-            <circle cx="20" cy="6" r="0.8" fill="#8A2BE2"/>
-            <circle cx="26" cy="8" r="0.8" fill="#8A2BE2"/>
-          </svg>
-        </div>
-        
-        <div class="mini-template" onclick="showTemplatesModal()" title="Infinity Loop">
-          <svg viewBox="0 0 40 30" class="mini-shape">
-            <path d="M 12 15 Q 16 10 20 15 Q 24 20 28 15 Q 24 10 20 15 Q 16 20 12 15" stroke="#8A2BE2" stroke-width="1" fill="none"/>
-            <circle cx="12" cy="15" r="1" fill="#8A2BE2"/>
-            <circle cx="20" cy="15" r="1" fill="#8A2BE2"/>
-          </svg>
-        </div>
-        
-        <div class="mini-template" onclick="showTemplatesModal()" title="Spiral">
-          <svg viewBox="0 0 40 30" class="mini-shape">
-            <path d="M 20 15 Q 18 13 16 16 Q 14 18 17 17 Q 22 14 24 17" stroke="#8A2BE2" stroke-width="1" fill="none"/>
-            <circle cx="20" cy="15" r="1" fill="#8A2BE2"/>
-            <circle cx="16" cy="16" r="1" fill="#8A2BE2"/>
-          </svg>
+    <div style="display: flex; gap: 15px; margin-top: 20px; justify-content: center;">
+          <!-- Instructions -->
+        <div style="margin-top: 30px; padding: 20px; background: rgba(107, 114, 128, 0.1); border-radius: 8px; border: 1px solid rgba(107, 114, 128, 0.3); max-width: 800px; margin-left: auto; margin-right: auto;">
+          <div style="color: #6B7280; font-size: 16px; font-weight: bold; margin-bottom: 10px;">📁 How to Apply Changes:</div>
+          <ol style="color: #bbb; font-size: 14px; line-height: 1.6; margin: 0; padding-left: 20px;">
+            <li>Edit events above and click "Save Events"</li>
+            <li>Download the generated timeline.js file</li>
+            <li>Replace your existing timeline.js file</li>
+            <li>Refresh your timeline to see changes</li>
+          </ol>
         </div>
       </div>
-      
-      <button class="btn secondary" onclick="showTemplatesModal()" style="width: 100%; margin-top: 15px;">
-        ℹ️ View All Templates
-      </button>
+      <div style="display: flex; gap: 15px; margin-top: 20px; justify-content: center;">
+      <button class="btn" onclick="saveEvents()">💾 Save Events</button>
+      <button class="btn secondary" onclick="loadEvents()">🔄 Reload Events</button>
     </div>
   </div>
+    
+
 
   <!-- Templates Info Modal -->
   <div id="templates-modal" class="modal" style="display: none;">
     <div class="modal-content">
       <div class="modal-header">
-        <h2 style="color: #8A2BE2; margin: 0;">📐 Available Timeline Templates</h2>
+        <h2 style="color: #6B7280; margin: 0;">Available Timeline Templates</h2>
         <span class="close" onclick="closeTemplatesModal()">&times;</span>
       </div>
       <div class="modal-body">
-        <p style="color: #bbb; margin-bottom: 20px;">Choose from these professionally designed timeline patterns:</p>
         
         <div class="templates-grid">
           <div class="template-item">
             <div class="template-preview">
               <svg viewBox="0 0 120 80" class="shape-preview">
-                <path d="M 20 20 L 20 60" stroke="#8A2BE2" stroke-width="2" fill="none"/>
-                <circle cx="20" cy="20" r="3" fill="#8A2BE2"/>
-                <circle cx="20" cy="40" r="3" fill="#8A2BE2"/>
-                <circle cx="20" cy="60" r="3" fill="#8A2BE2"/>
+                <path d="M 20 20 L 20 60" stroke="#6B7280" stroke-width="2" fill="none"/>
+                <circle cx="20" cy="20" r="3" fill="#6B7280"/>
+                <circle cx="20" cy="40" r="3" fill="#6B7280"/>
+                <circle cx="20" cy="60" r="3" fill="#6B7280"/>
                 <rect x="30" y="15" width="25" height="10" fill="none" stroke="#666" stroke-width="1"/>
                 <rect x="30" y="35" width="25" height="10" fill="none" stroke="#666" stroke-width="1"/>
                 <rect x="30" y="55" width="25" height="10" fill="none" stroke="#666" stroke-width="1"/>
@@ -457,10 +632,10 @@
           <div class="template-item">
             <div class="template-preview">
               <svg viewBox="0 0 120 80" class="shape-preview">
-                <path d="M 10 60 L 30 60 L 30 40 L 50 40 L 50 20 L 70 20" stroke="#8A2BE2" stroke-width="2" fill="none"/>
-                <circle cx="10" cy="60" r="3" fill="#8A2BE2"/>
-                <circle cx="30" cy="40" r="3" fill="#8A2BE2"/>
-                <circle cx="50" cy="20" r="3" fill="#8A2BE2"/>
+                <path d="M 10 60 L 30 60 L 30 40 L 50 40 L 50 20 L 70 20" stroke="#6B7280" stroke-width="2" fill="none"/>
+                <circle cx="10" cy="60" r="3" fill="#6B7280"/>
+                <circle cx="30" cy="40" r="3" fill="#6B7280"/>
+                <circle cx="50" cy="20" r="3" fill="#6B7280"/>
                 <rect x="75" y="15" width="20" height="10" fill="none" stroke="#666" stroke-width="1"/>
                 <rect x="75" y="35" width="20" height="10" fill="none" stroke="#666" stroke-width="1"/>
                 <rect x="75" y="55" width="20" height="10" fill="none" stroke="#666" stroke-width="1"/>
@@ -473,10 +648,10 @@
           <div class="template-item">
             <div class="template-preview">
               <svg viewBox="0 0 120 80" class="shape-preview">
-                <path d="M 10 40 Q 30 20 50 40 Q 70 60 90 40" stroke="#8A2BE2" stroke-width="2" fill="none"/>
-                <circle cx="10" cy="40" r="3" fill="#8A2BE2"/>
-                <circle cx="50" cy="40" r="3" fill="#8A2BE2"/>
-                <circle cx="90" cy="40" r="3" fill="#8A2BE2"/>
+                <path d="M 10 40 Q 30 20 50 40 Q 70 60 90 40" stroke="#6B7280" stroke-width="2" fill="none"/>
+                <circle cx="10" cy="40" r="3" fill="#6B7280"/>
+                <circle cx="50" cy="40" r="3" fill="#6B7280"/>
+                <circle cx="90" cy="40" r="3" fill="#6B7280"/>
                 <rect x="95" y="35" width="20" height="10" fill="none" stroke="#666" stroke-width="1"/>
               </svg>
             </div>
@@ -487,10 +662,10 @@
           <div class="template-item">
             <div class="template-preview">
               <svg viewBox="0 0 120 80" class="shape-preview">
-                <path d="M 10 50 Q 30 20 60 40 Q 90 60 110 30" stroke="#8A2BE2" stroke-width="2" fill="none"/>
-                <circle cx="30" cy="30" r="3" fill="#8A2BE2"/>
-                <circle cx="60" cy="40" r="3" fill="#8A2BE2"/>
-                <circle cx="90" cy="50" r="3" fill="#8A2BE2"/>
+                <path d="M 10 50 Q 30 20 60 40 Q 90 60 110 30" stroke="#6B7280" stroke-width="2" fill="none"/>
+                <circle cx="30" cy="30" r="3" fill="#6B7280"/>
+                <circle cx="60" cy="40" r="3" fill="#6B7280"/>
+                <circle cx="90" cy="50" r="3" fill="#6B7280"/>
                 <rect x="85" y="15" width="18" height="8" fill="none" stroke="#666" stroke-width="1"/>
               </svg>
             </div>
@@ -501,11 +676,11 @@
           <div class="template-item">
             <div class="template-preview">
               <svg viewBox="0 0 120 80" class="shape-preview">
-                <path d="M 60 20 L 80 40 L 60 60 L 40 40 Z" stroke="#8A2BE2" stroke-width="2" fill="none"/>
-                <circle cx="60" cy="20" r="3" fill="#8A2BE2"/>
-                <circle cx="80" cy="40" r="3" fill="#8A2BE2"/>
-                <circle cx="60" cy="60" r="3" fill="#8A2BE2"/>
-                <circle cx="40" cy="40" r="3" fill="#8A2BE2"/>
+                <path d="M 60 20 L 80 40 L 60 60 L 40 40 Z" stroke="#6B7280" stroke-width="2" fill="none"/>
+                <circle cx="60" cy="20" r="3" fill="#6B7280"/>
+                <circle cx="80" cy="40" r="3" fill="#6B7280"/>
+                <circle cx="60" cy="60" r="3" fill="#6B7280"/>
+                <circle cx="40" cy="40" r="3" fill="#6B7280"/>
                 <rect x="85" y="35" width="15" height="8" fill="none" stroke="#666" stroke-width="1"/>
               </svg>
             </div>
@@ -516,10 +691,10 @@
           <div class="template-item">
             <div class="template-preview">
               <svg viewBox="0 0 120 80" class="shape-preview">
-                <path d="M 60 25 Q 45 15 35 25 Q 25 35 35 45 Q 45 55 60 45 Q 75 35 60 25" stroke="#8A2BE2" stroke-width="2" fill="none"/>
-                <circle cx="60" cy="25" r="3" fill="#8A2BE2"/>
-                <circle cx="35" cy="35" r="3" fill="#8A2BE2"/>
-                <circle cx="60" cy="45" r="3" fill="#8A2BE2"/>
+                <path d="M 60 25 Q 45 15 35 25 Q 25 35 35 45 Q 45 55 60 45 Q 75 35 60 25" stroke="#6B7280" stroke-width="2" fill="none"/>
+                <circle cx="60" cy="25" r="3" fill="#6B7280"/>
+                <circle cx="35" cy="35" r="3" fill="#6B7280"/>
+                <circle cx="60" cy="45" r="3" fill="#6B7280"/>
                 <rect x="80" y="30" width="15" height="8" fill="none" stroke="#666" stroke-width="1"/>
               </svg>
             </div>
@@ -530,11 +705,11 @@
           <div class="template-item">
             <div class="template-preview">
               <svg viewBox="0 0 120 80" class="shape-preview">
-                <path d="M 60 15 L 70 25 L 80 20 L 75 35 L 85 45 L 70 50 L 75 65 L 60 60 L 45 65 L 50 50 L 35 45 L 45 35 L 40 20 L 50 25 Z" stroke="#8A2BE2" stroke-width="2" fill="none"/>
-                <circle cx="60" cy="15" r="2" fill="#8A2BE2"/>
-                <circle cx="80" cy="20" r="2" fill="#8A2BE2"/>
-                <circle cx="85" cy="45" r="2" fill="#8A2BE2"/>
-                <circle cx="60" cy="60" r="2" fill="#8A2BE2"/>
+                <path d="M 60 15 L 70 25 L 80 20 L 75 35 L 85 45 L 70 50 L 75 65 L 60 60 L 45 65 L 50 50 L 35 45 L 45 35 L 40 20 L 50 25 Z" stroke="#6B7280" stroke-width="2" fill="none"/>
+                <circle cx="60" cy="15" r="2" fill="#6B7280"/>
+                <circle cx="80" cy="20" r="2" fill="#6B7280"/>
+                <circle cx="85" cy="45" r="2" fill="#6B7280"/>
+                <circle cx="60" cy="60" r="2" fill="#6B7280"/>
                 <rect x="90" y="35" width="12" height="6" fill="none" stroke="#666" stroke-width="1"/>
               </svg>
             </div>
@@ -545,11 +720,11 @@
           <div class="template-item">
             <div class="template-preview">
               <svg viewBox="0 0 120 80" class="shape-preview">
-                <path d="M 30 40 Q 20 25 35 30 Q 50 20 55 35 Q 70 25 75 40 Q 90 30 85 45 Q 80 60 65 55 Q 50 65 45 50 Q 30 60 25 45 Q 15 50 30 40" stroke="#8A2BE2" stroke-width="2" fill="none"/>
-                <circle cx="35" cy="30" r="2" fill="#8A2BE2"/>
-                <circle cx="75" cy="40" r="2" fill="#8A2BE2"/>
-                <circle cx="65" cy="55" r="2" fill="#8A2BE2"/>
-                <circle cx="25" cy="45" r="2" fill="#8A2BE2"/>
+                <path d="M 30 40 Q 20 25 35 30 Q 50 20 55 35 Q 70 25 75 40 Q 90 30 85 45 Q 80 60 65 55 Q 50 65 45 50 Q 30 60 25 45 Q 15 50 30 40" stroke="#6B7280" stroke-width="2" fill="none"/>
+                <circle cx="35" cy="30" r="2" fill="#6B7280"/>
+                <circle cx="75" cy="40" r="2" fill="#6B7280"/>
+                <circle cx="65" cy="55" r="2" fill="#6B7280"/>
+                <circle cx="25" cy="45" r="2" fill="#6B7280"/>
                 <rect x="90" y="35" width="12" height="6" fill="none" stroke="#666" stroke-width="1"/>
               </svg>
             </div>
@@ -560,10 +735,10 @@
           <div class="template-item">
             <div class="template-preview">
               <svg viewBox="0 0 120 80" class="shape-preview">
-                <path d="M 30 40 Q 40 25 60 40 Q 80 55 90 40 Q 80 25 60 40 Q 40 55 30 40" stroke="#8A2BE2" stroke-width="2" fill="none"/>
-                <circle cx="30" cy="40" r="3" fill="#8A2BE2"/>
-                <circle cx="60" cy="40" r="3" fill="#8A2BE2"/>
-                <circle cx="90" cy="40" r="3" fill="#8A2BE2"/>
+                <path d="M 30 40 Q 40 25 60 40 Q 80 55 90 40 Q 80 25 60 40 Q 40 55 30 40" stroke="#6B7280" stroke-width="2" fill="none"/>
+                <circle cx="30" cy="40" r="3" fill="#6B7280"/>
+                <circle cx="60" cy="40" r="3" fill="#6B7280"/>
+                <circle cx="90" cy="40" r="3" fill="#6B7280"/>
                 <rect x="95" y="35" width="15" height="8" fill="none" stroke="#666" stroke-width="1"/>
               </svg>
             </div>
@@ -574,11 +749,11 @@
           <div class="template-item">
             <div class="template-preview">
               <svg viewBox="0 0 120 80" class="shape-preview">
-                <path d="M 60 40 Q 50 35 45 45 Q 35 50 30 45 Q 25 40 35 35 Q 45 30 55 35 Q 65 30 75 35 Q 85 40 80 50" stroke="#8A2BE2" stroke-width="2" fill="none"/>
-                <circle cx="60" cy="40" r="3" fill="#8A2BE2"/>
-                <circle cx="45" cy="45" r="3" fill="#8A2BE2"/>
-                <circle cx="30" cy="45" r="3" fill="#8A2BE2"/>
-                <circle cx="75" cy="35" r="3" fill="#8A2BE2"/>
+                <path d="M 60 40 Q 50 35 45 45 Q 35 50 30 45 Q 25 40 35 35 Q 45 30 55 35 Q 65 30 75 35 Q 85 40 80 50" stroke="#6B7280" stroke-width="2" fill="none"/>
+                <circle cx="60" cy="40" r="3" fill="#6B7280"/>
+                <circle cx="45" cy="45" r="3" fill="#6B7280"/>
+                <circle cx="30" cy="45" r="3" fill="#6B7280"/>
+                <circle cx="75" cy="35" r="3" fill="#6B7280"/>
                 <rect x="85" y="45" width="15" height="8" fill="none" stroke="#666" stroke-width="1"/>
               </svg>
             </div>
@@ -589,12 +764,12 @@
           <div class="template-item">
             <div class="template-preview">
               <svg viewBox="0 0 120 80" class="shape-preview">
-                <path d="M 10 50 Q 30 30 50 50 Q 70 70 90 50" stroke="#8A2BE2" stroke-width="2" fill="none"/>
-                <circle cx="10" cy="50" r="3" fill="#8A2BE2"/>
-                <circle cx="30" cy="40" r="3" fill="#8A2BE2"/>
-                <circle cx="50" cy="50" r="3" fill="#8A2BE2"/>
-                <circle cx="70" cy="60" r="3" fill="#8A2BE2"/>
-                <circle cx="90" cy="50" r="3" fill="#8A2BE2"/>
+                <path d="M 10 50 Q 30 30 50 50 Q 70 70 90 50" stroke="#6B7280" stroke-width="2" fill="none"/>
+                <circle cx="10" cy="50" r="3" fill="#6B7280"/>
+                <circle cx="30" cy="40" r="3" fill="#6B7280"/>
+                <circle cx="50" cy="50" r="3" fill="#6B7280"/>
+                <circle cx="70" cy="60" r="3" fill="#6B7280"/>
+                <circle cx="90" cy="50" r="3" fill="#6B7280"/>
                 <rect x="95" y="45" width="15" height="8" fill="none" stroke="#666" stroke-width="1"/>
               </svg>
             </div>
@@ -605,11 +780,11 @@
           <div class="template-item">
             <div class="template-preview">
               <svg viewBox="0 0 120 80" class="shape-preview">
-                <path d="M 10 40 L 90 40" stroke="#8A2BE2" stroke-width="2" fill="none"/>
-                <circle cx="10" cy="40" r="3" fill="#8A2BE2"/>
-                <circle cx="35" cy="40" r="3" fill="#8A2BE2"/>
-                <circle cx="60" cy="40" r="3" fill="#8A2BE2"/>
-                <circle cx="85" cy="40" r="3" fill="#8A2BE2"/>
+                <path d="M 10 40 L 90 40" stroke="#6B7280" stroke-width="2" fill="none"/>
+                <circle cx="10" cy="40" r="3" fill="#6B7280"/>
+                <circle cx="35" cy="40" r="3" fill="#6B7280"/>
+                <circle cx="60" cy="40" r="3" fill="#6B7280"/>
+                <circle cx="85" cy="40" r="3" fill="#6B7280"/>
                 <rect x="15" y="25" width="15" height="8" fill="none" stroke="#666" stroke-width="1"/>
                 <rect x="40" y="25" width="15" height="8" fill="none" stroke="#666" stroke-width="1"/>
                 <rect x="65" y="25" width="15" height="8" fill="none" stroke="#666" stroke-width="1"/>
@@ -623,11 +798,11 @@
           <div class="template-item">
             <div class="template-preview">
               <svg viewBox="0 0 120 80" class="shape-preview">
-                <path d="M 60 10 L 60 70" stroke="#8A2BE2" stroke-width="2" fill="none"/>
-                <circle cx="60" cy="15" r="3" fill="#8A2BE2"/>
-                <circle cx="60" cy="35" r="3" fill="#8A2BE2"/>
-                <circle cx="60" cy="55" r="3" fill="#8A2BE2"/>
-                <circle cx="60" cy="70" r="3" fill="#8A2BE2"/>
+                <path d="M 60 10 L 60 70" stroke="#6B7280" stroke-width="2" fill="none"/>
+                <circle cx="60" cy="15" r="3" fill="#6B7280"/>
+                <circle cx="60" cy="35" r="3" fill="#6B7280"/>
+                <circle cx="60" cy="55" r="3" fill="#6B7280"/>
+                <circle cx="60" cy="70" r="3" fill="#6B7280"/>
                 <rect x="30" y="10" width="15" height="8" fill="none" stroke="#666" stroke-width="1"/>
                 <rect x="75" y="30" width="15" height="8" fill="none" stroke="#666" stroke-width="1"/>
                 <rect x="30" y="50" width="15" height="8" fill="none" stroke="#666" stroke-width="1"/>
@@ -639,24 +814,10 @@
           </div>
         </div>
         
-        <div style="margin-top: 20px; padding: 15px; background: rgba(138, 43, 226, 0.1); border-radius: 6px; border-left: 4px solid #8A2BE2;">
-          <strong style="color: #8A2BE2;">💡 How to Use:</strong>
-          <p style="color: #bbb; margin: 5px 0 0 0;">Click "⚡ Automatically Generate Path" to randomly select and generate one of these templates. Each pattern is mathematically designed for optimal visual appeal and professional presentation.</p>
-        </div>
       </div>
     </div>
   </div>
 
-  <div class="info">
-    <strong>How to Use:</strong>
-    <ul style="margin-left: 20px; margin-top: 10px;">
-      <li>Purple circles are milestone points (timeline dots)</li>
-      <li>Rectangles are slide positions</li>
-      <li>Drag elements to reposition them</li>
-      <li>The timeline path automatically updates as you move milestones</li>
-      <li>Click "Update Timeline" to download a new positions.json file</li>
-    </ul>
-  </div>
 
   <div class="info" style="background: #2c3e50; border-color: #34495e;">
     <strong>📡 Server Setup Instructions:</strong>
@@ -668,17 +829,6 @@
       <code style="color: #e74c3c;">python3 -m http.server 8000</code><br>
       <small style="color: #95a5a6;">Then open: http://localhost:8000/settings.html</small>
     </div>
-
-    <div style="background: #27ae60; padding: 15px; border-radius: 5px; margin: 10px 0;">
-      <strong style="color: white;">📥 How "Update Timeline" Works:</strong><br>
-      <span style="color: #ecf0f1;">
-        1. Click "Update Timeline" button<br>
-        2. A new positions.json file downloads automatically<br>
-        3. Replace the old positions.json with the downloaded file<br>
-        4. Refresh the main timeline to see your changes
-      </span>
-    </div>
-  </div>
 
   <script>
     let positions = {
@@ -861,66 +1011,78 @@
           
           const event = events[index];
           if (event) {
-            // Use fixed dimensions matching the actual timeline slides
-            const SLIDE_WIDTH = 240; // Match slides.js slide width
-            const SLIDE_BASE_HEIGHT = 150; // Base slide height
-            const IMAGE_HEIGHT = 120; // Height of image container from slides.js
-            const IMAGE_MARGIN = 10;  // Margin-top of image from slides.js
-            
-            // Check if event has image for content building
+            // Calculate actual rendered dimensions to match timeline exactly
+            const SLIDE_WIDTH = 240; // Fixed width from styles.css
             const hasImage = event.image && event.image.length > 0;
             
-            // Calculate actual height including image if present
-            let actualHeight = SLIDE_BASE_HEIGHT;
+            // Calculate text heights (approximate based on actual timeline styling)
+            const titleHeight = 25; // H3 with padding-bottom: 10px
+            const contentLines = Math.ceil(event.content.length / 50); // ~50 chars per line
+            const contentHeight = contentLines * 15; // ~15px per line
+            const imageHeight = hasImage ? 120 : 0; // Estimated actual image height
+            const imageMargin = hasImage ? 10 : 0;
+            const padding = 30; // 15px padding * 2
+            
+            const calculatedHeight = Math.max(150, titleHeight + contentHeight + imageHeight + imageMargin + padding);
+            
+            const width = SLIDE_WIDTH * scaleX;
+            const height = calculatedHeight * scaleY;
+            
+            // Create space representation with proportional sections
+            let contentHTML = `<div style="height: 100%; display: flex; flex-direction: column;">`;
+            
+            // Title section (only visible text)
+            const titleSectionHeight = (titleHeight / calculatedHeight) * 100;
+            contentHTML += `<div style="
+              height: ${titleSectionHeight}%; 
+              background: rgba(255, 255, 255, 0.1);
+              display: table; 
+              align-items: center;
+              padding: 5px;
+              font-size: 11px;
+              font-weight: bold;
+              color: #fff;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            ">${event.title}</div>`;
+            
+            // Content section (visual representation)
+            const contentSectionHeight = (contentHeight / calculatedHeight) * 100;
+            contentHTML += `<div style="
+              height: ${contentSectionHeight}%; 
+              background: rgba(255, 255, 255, 0.05);
+              border-top: 1px solid rgba(255, 255, 255, 0.1);
+            "></div>`;
+            
+            // Image section (if present)
             if (hasImage) {
-              actualHeight += IMAGE_HEIGHT + IMAGE_MARGIN;
+              const imageSectionHeight = ((imageHeight + imageMargin) / calculatedHeight) * 100;
+              contentHTML += `<div style="
+                height: ${imageSectionHeight}%; 
+                background: rgba(107, 114, 128, 0.15);
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 8px;
+                color: #6B7280;
+              ">📷</div>`;
             }
             
-            let width = SLIDE_WIDTH * scaleX;
-            let height = actualHeight * scaleY;
-            
-            // Build content HTML
-            let contentHTML = `<h3>${event.title}</h3>`;
-            
-            // Show reasonable amount of content
-            const maxContentChars = 180;
-            const truncatedContent = event.content.length > maxContentChars 
-              ? event.content.substring(0, maxContentChars) + '...' 
-              : event.content;
-            contentHTML += `<p>${truncatedContent}</p>`;
-            
-            // Add image placeholder if image exists - make it look more like actual image space
-            if (hasImage) {
-              contentHTML += `<div class="image-placeholder" style="
-                width: 100%; 
-                height: ${IMAGE_HEIGHT * scaleY}px; 
-                margin-top: ${IMAGE_MARGIN * scaleY}px; 
-                background: rgba(138, 43, 226, 0.2); 
-                border: 1px dashed rgba(138, 43, 226, 0.5); 
-                border-radius: 4px; 
-                display: flex; 
-                align-items: center; 
-                justify-content: center; 
-                font-size: 12px; 
-                color: #8A2BE2;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-              ">📷 ${event.image}</div>`;
-            }
+            contentHTML += `</div>`;
             
             slide.innerHTML = contentHTML;
             slide.style.width = width + 'px';
             slide.style.height = height + 'px';
             slide.style.left = x + 'px';
             slide.style.top = y + 'px';
-            slide.title = `${event.title} - Click to reposition`;
+            slide.title = `${event.title} - Space: ${width.toFixed(0)}×${height.toFixed(0)}px`;
             
-            console.log(`Slide ${index}: size(${width.toFixed(1)}x${height.toFixed(1)}) at (${x.toFixed(1)}, ${y.toFixed(1)})`);
+            console.log(`Slide ${index}: calculated size(${width.toFixed(1)}x${height.toFixed(1)}) at (${x.toFixed(1)}, ${y.toFixed(1)})`);
           } else {
-            // Fallback for missing events - use same fixed dimensions
+            // Fallback for missing events - use same fixed dimensions as slides.js
             const SLIDE_WIDTH = 240;
-            const SLIDE_HEIGHT = 150;
+            const SLIDE_HEIGHT = 200;
             slide.style.width = (SLIDE_WIDTH * scaleX) + 'px';
             slide.style.height = (SLIDE_HEIGHT * scaleY) + 'px';
             slide.style.left = x + 'px';
@@ -934,8 +1096,10 @@
         });
 
         updatePath();
+        updateConnectors();
         setupDragListeners();
         highlightOverlappingSlides();
+        
       }, 50);
     }
 
@@ -985,8 +1149,73 @@
       positions.pathDefinition = virtualPath; // Store virtual coordinates for export
     }
 
+    function updateConnectors() {
+      const connectorsOverlay = document.getElementById('connectorsOverlay');
+      if (!connectorsOverlay || !positions.milestonePoints || positions.milestonePoints.length === 0) {
+        console.warn('Connectors overlay not found or no milestone points');
+        return;
+      }
+
+      const canvasRect = document.getElementById('canvas').getBoundingClientRect();
+      if (canvasRect.width === 0 || canvasRect.height === 0) {
+        console.warn('Canvas not properly sized for connector update');
+        return;
+      }
+      
+      const scaleX = canvasRect.width / positions.virtualCanvas.width;
+      const scaleY = canvasRect.height / positions.virtualCanvas.height;
+
+      // Clear existing connector lines completely (same pattern as updatePath)
+      connectorsOverlay.innerHTML = '';
+
+      // Create connector lines between slides and milestones
+      positions.slidePositions.forEach((slidePos, index) => {
+        if (positions.milestonePoints[index]) {
+          const milestone = positions.milestonePoints[index];
+          
+          // Calculate connection points (scaled to canvas)
+          const slideX = slidePos.x * scaleX;
+          const slideY = slidePos.y * scaleY;
+          const milestoneX = milestone.x * scaleX;
+          const milestoneY = milestone.y * scaleY;
+          
+          // Calculate actual slide dimensions (same logic as renderElements)
+          const event = events[index];
+          const SLIDE_WIDTH = 240;
+          let slideHeight = 200; // Default
+          
+          if (event) {
+            const hasImage = event.image && event.image.length > 0;
+            const titleHeight = 25;
+            const contentLines = Math.ceil(event.content.length / 50);
+            const contentHeight = contentLines * 15;
+            const imageHeight = hasImage ? 120 : 0;
+            const imageMargin = hasImage ? 10 : 0;
+            const padding = 30;
+            slideHeight = Math.max(150, titleHeight + contentHeight + imageHeight + imageMargin + padding);
+          }
+          
+          const actualSlideWidth = SLIDE_WIDTH * scaleX;
+          const actualSlideHeight = slideHeight * scaleY;
+          
+          // Create connector line element - connect from slide center to milestone center
+          const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          line.setAttribute('x1', slideX + actualSlideWidth / 2);
+          line.setAttribute('y1', slideY + actualSlideHeight / 2);
+          line.setAttribute('x2', milestoneX);
+          line.setAttribute('y2', milestoneY);
+          line.setAttribute('stroke', 'rgba(255, 255, 255, 0.3)');
+          line.setAttribute('stroke-width', '2');
+          line.setAttribute('stroke-dasharray', '5,3');
+          
+          connectorsOverlay.appendChild(line);
+        }
+      });
+    }
+
     function setupDragListeners() {
       const elements = document.querySelectorAll('.milestone, .slide');
+      console.log(`Setting up drag listeners for ${elements.length} elements`);
       
       elements.forEach(element => {
         element.addEventListener('mousedown', startDrag);
@@ -1037,8 +1266,10 @@
       if (type === 'milestone') {
         positions.milestonePoints[index] = { x: virtualX, y: virtualY };
         updatePath();
+        // Don't update connectors during drag - only at the end
       } else if (type === 'slide') {
         positions.slidePositions[index] = { x: virtualX, y: virtualY };
+        // Don't update connectors during drag - only at the end
         highlightOverlappingSlides(); // Check for overlaps when slide is moved
       }
     }
@@ -1048,7 +1279,8 @@
         dragElement.classList.remove('dragging');
         dragElement = null;
         
-        // Check for overlaps after drag ends
+        // Update connectors and check for overlaps after drag ends
+        updateConnectors();
         highlightOverlappingSlides();
         
         // Update template name to show it's been customized
@@ -3018,41 +3250,184 @@
       }
     }
 
+    // Tab Management Functions
+    function switchTab(tabName) {
+      // Remove active class from all tabs and buttons
+      document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      
+      // Add active class to selected tab and button
+      document.getElementById(tabName + '-tab').classList.add('active');
+      document.querySelector(`[onclick="switchTab('${tabName}')"]`).classList.add('active');
+      
+      // Load events when switching to events tab
+      if (tabName === 'events') {
+        loadEvents();
+      }
+      
+      // Initialize theme preview when switching to theme and path tab
+      if (tabName === 'themeAndPath') {
+        const initialTheme = themes[currentThemeKey];
+        if (initialTheme) {
+          updateThemePreview(initialTheme);
+        }
+      }
+    }
+
+    // Events Management Functions
+    let timelineEvents = [];
+
+    async function loadEvents() {
+      try {
+        // Try to fetch from timeline.js
+        const response = await fetch('timeline.js');
+        if (response.ok) {
+          const jsContent = await response.text();
+          // Extract events array from the JavaScript file
+          const eventsMatch = jsContent.match(/events:\s*\[([\s\S]*?)\]/);
+          if (eventsMatch) {
+            // Parse the events array (this is a simple approach)
+            const eventsString = '[' + eventsMatch[1] + ']';
+            try {
+              timelineEvents = eval('(' + eventsString + ')');
+            } catch (e) {
+              console.warn('Could not parse events from timeline.js, using defaults');
+              useDefaultEvents();
+            }
+          } else {
+            useDefaultEvents();
+          }
+        } else {
+          useDefaultEvents();
+        }
+      } catch (error) {
+        console.warn('Could not load timeline.js, using defaults:', error);
+        useDefaultEvents();
+      }
+      
+      renderEventsList();
+    }
+
+    function useDefaultEvents() {
+      timelineEvents = [
+        {
+          title: "Feb 2024: Project Start",
+          content: 'UN Habitat tasks the innovation team to build a platform to improve cities be smarter. <a href="https://qolimpact.com/about" target="_blank" rel="noopener noreferrer">Learn more about the mandate here</a>',
+          image: "assets/event1.png"
+        },
+        {
+          title: "Jul 2024: The Innovation team is formed.",
+          content: "The team included developers, designers, data analysts, product integration, researchers, and 3 external partners. <a href=\"team.html\" target=\"_blank\" rel=\"noopener noreferrer\">Meet the team here</a>",
+          image: "assets/event2.png"
+        }
+      ];
+    }
+
+    function renderEventsList() {
+      const eventsList = document.getElementById('events-list');
+      eventsList.innerHTML = '';
+      
+      timelineEvents.forEach((event, index) => {
+        const eventDiv = document.createElement('div');
+        eventDiv.className = 'event-item';
+        eventDiv.innerHTML = `
+          <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 8px;">
+            <small style="color: #999;">Event ${index + 1}</small>
+            <button onclick="removeEvent(${index})" style="background: #d32f2f; color: white; border: none; padding: 2px 6px; border-radius: 3px; font-size: 10px; cursor: pointer; margin: 0 0 0 90%;">Remove</button>
+          </div>
+          <input type="text" class="event-input" placeholder="Event title" value="${event.title || ''}" onchange="updateEvent(${index}, 'title', this.value)">
+          <textarea class="event-textarea" placeholder="Event content (HTML allowed)" onchange="updateEvent(${index}, 'content', this.value)">${event.content || ''}</textarea>
+          <input type="text" class="event-input" placeholder="Image path (optional)" value="${event.image || ''}" onchange="updateEvent(${index}, 'image', this.value)">
+        `;
+        eventsList.appendChild(eventDiv);
+      });
+    }
+
+    function addNewEvent() {
+      timelineEvents.push({
+        title: "New Event",
+        content: "Event description",
+        image: ""
+      });
+      renderEventsList();
+    }
+
+    function removeEvent(index) {
+      if (confirm('Are you sure you want to remove this event?')) {
+        timelineEvents.splice(index, 1);
+        renderEventsList();
+      }
+    }
+
+    function updateEvent(index, field, value) {
+      if (timelineEvents[index]) {
+        timelineEvents[index][field] = value;
+      }
+    }
+
+    function saveEvents() {
+      // Generate the timeline.js file content
+      const jsContent = `function getTimelineData() {
+  return {
+    events: [
+${timelineEvents.map(event => `        {
+            title: ${JSON.stringify(event.title)},
+            content: ${JSON.stringify(event.content)},
+            image: ${JSON.stringify(event.image)}
+        }`).join(',\n')}
+    ]
+  };
+}`;
+
+      // Create and download the file
+      const blob = new Blob([jsContent], { type: 'application/javascript' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'timeline.js';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      showTempMessage('💾 timeline.js downloaded! Replace your existing file.');
+    }
+
     // Theme Management Functions
     let themes = {
       "cosmic": {
         "name": "Cosmic Dark",
-        "description": "Purple and blue cosmic theme with glowing effects",
+        "description": "Neutral gray theme with subtle effects",
         "colors": {
           "background": "#111",
           "containerBackground": "transparent",
           "textPrimary": "#fff",
           "textSecondary": "rgba(255, 255, 255, 0.8)",
           "pathGradient": {
-            "start": "#8A2BE2",
+            "start": "#6B7280",
             "middle": "#1E90FF", 
             "end": "#FF69B4"
           },
           "milestones": [
-            "#8A2BE2",
+            "#6B7280",
             "#1E90FF", 
             "#00CED1",
             "#9370DB",
             "#FF69B4"
           ],
-          "activeMilestone": "#8A2BE2",
+          "activeMilestone": "#6B7280",
           "controls": {
             "background": "rgba(255, 255, 255, 0.1)",
             "border": "rgba(255, 255, 255, 0.2)",
             "hover": "rgba(255, 255, 255, 0.2)",
-            "zoomOutBorder": "#8A2BE2",
-            "zoomOutHover": "rgba(138, 43, 226, 0.15)"
+            "zoomOutBorder": "#6B7280",
+            "zoomOutHover": "rgba(107, 114, 128, 0.15)"
           }
         },
         "effects": {
           "pathGlow": "drop-shadow(0 0 12px rgba(100, 100, 255, 0.5))",
           "milestoneGlow": "0 0 0 4px rgba(255, 255, 255, 0.3), 0 0 10px rgba(255, 255, 255, 0.5)",
-          "activeMilestoneGlow": "0 0 0 6px rgba(138, 43, 226, 0.4), 0 0 20px rgba(138, 43, 226, 0.8)",
+          "activeMilestoneGlow": "0 0 0 6px rgba(107, 114, 128, 0.4), 0 0 20px rgba(107, 114, 128, 0.8)",
           "controlsBackdrop": "blur(10px)",
           "controlsShadow": "0 4px 30px rgba(0, 0, 0, 0.1)"
         },
@@ -3131,6 +3506,61 @@
         <strong>${theme.name}</strong><br>
         <small style="color: #bbb;">${theme.description}</small>
       `;
+      
+      // Update visual preview colors
+      const previewContainer = document.getElementById('theme-visual-preview');
+      const pathElement = document.getElementById('preview-path');
+      const circles = [
+        document.getElementById('preview-circle-1'),
+        document.getElementById('preview-circle-2'),
+        document.getElementById('preview-circle-3')
+      ];
+      const connectors = [
+        document.getElementById('connector-1'),
+        document.getElementById('connector-2'),
+        document.getElementById('connector-3')
+      ];
+      const slideElements = [
+        document.getElementById('preview-slide-1'),
+        document.getElementById('preview-slide-2'),
+        document.getElementById('preview-slide-3')
+      ];
+      const previewBackground = previewContainer.querySelector('div[style*="padding: 10px"]');
+      
+      // Update path
+      if (pathElement) {
+        pathElement.setAttribute('stroke', theme.colors.activeMilestone);
+        pathElement.setAttribute('stroke-width', theme.dimensions.pathWidth || '3');
+      }
+      
+      // Update milestone circles
+      circles.forEach(circle => {
+        if (circle) {
+          circle.setAttribute('fill', theme.colors.activeMilestone);
+          circle.setAttribute('stroke', theme.colors.textPrimary);
+          circle.setAttribute('r', (theme.dimensions.milestoneSize || 8) / 2);
+        }
+      });
+      
+      // Update connector lines
+      connectors.forEach(connector => {
+        if (connector) {
+          connector.setAttribute('stroke', 'rgba(255,255,255,0.4)');
+        }
+      });
+      
+      // Update slide elements
+      slideElements.forEach(slide => {
+        if (slide) {
+          slide.setAttribute('fill', theme.colors.containerBackground || 'rgba(255, 255, 255, 0.1)');
+          slide.setAttribute('stroke', theme.colors.activeMilestone);
+        }
+      });
+      
+      // Update background
+      if (previewBackground) {
+        previewBackground.style.background = theme.colors.background || '#111';
+      }
     }
 
     async function applySelectedTheme() {
@@ -3178,7 +3608,11 @@
 
     // Initialize theme selector
     document.addEventListener('DOMContentLoaded', () => {
-      switchTheme(); // Set initial theme preview
+      // Set initial theme preview
+      const initialTheme = themes[currentThemeKey];
+      if (initialTheme) {
+        updateThemePreview(initialTheme);
+      }
     });
     
     function createSaveScript() {
@@ -3240,10 +3674,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             '3. Future saves will work automatically!');
     }
 
-    function previewTimeline() {
-      window.open('index.html', '_blank');
-    }
-
     function showTemplatesModal() {
       document.getElementById('templates-modal').style.display = 'block';
     }
@@ -3265,6 +3695,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       renderElements();
     });
 
+
     // Initialize when DOM is ready
     document.addEventListener('DOMContentLoaded', () => {
       console.log('DOM loaded, initializing settings page');
@@ -3277,6 +3708,517 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (document.readyState === 'complete' || document.readyState === 'interactive') {
       console.log('DOM already ready, initializing settings page');
       loadPositions();
+    }
+
+    // Layout calculation function (improved for better SVG generation)
+    function calculateLayout(eventCount, containerWidth, containerHeight, slideWidth, slideHeight, isMobile) {
+      const milestonePoints = [];
+      const slidePositions = [];
+      const connectorData = [];
+
+      if (eventCount === 0) {
+        return { pathDefinition: '', milestonePoints: [], slidePositions: [], connectorData: [] };
+      }
+
+      // Better curved path calculation with more spacing
+      const margin = 100;
+      const startX = margin + 100;
+      const endX = containerWidth - margin - 100;
+      const startY = containerHeight * 0.15;
+      const endY = containerHeight * 0.85;
+      
+      // Generate milestone points first
+      for (let i = 0; i < eventCount; i++) {
+        const progress = eventCount === 1 ? 0.5 : i / (eventCount - 1);
+        
+        // Create a more elegant S-curve
+        const x = startX + (endX - startX) * progress;
+        const waveAmplitude = 80;
+        const waveFrequency = 1.5;
+        const y = startY + (endY - startY) * progress + Math.sin(progress * Math.PI * waveFrequency) * waveAmplitude;
+        
+        milestonePoints.push({ x: Math.round(x), y: Math.round(y) });
+      }
+      
+      // Generate smooth path through all points
+      let pathDefinition = '';
+      if (milestonePoints.length > 0) {
+        pathDefinition = `M ${milestonePoints[0].x} ${milestonePoints[0].y}`;
+        
+        for (let i = 1; i < milestonePoints.length; i++) {
+          const prev = milestonePoints[i - 1];
+          const curr = milestonePoints[i];
+          
+          // Use quadratic curves for smoother paths
+          if (i === 1) {
+            pathDefinition += ` Q ${(prev.x + curr.x) / 2} ${prev.y} ${curr.x} ${curr.y}`;
+          } else {
+            const controlPointX = (prev.x + curr.x) / 2;
+            const controlPointY = (prev.y + curr.y) / 2;
+            pathDefinition += ` Q ${controlPointX} ${controlPointY} ${curr.x} ${curr.y}`;
+          }
+        }
+      }
+      
+      // Position slides with better spacing
+      milestonePoints.forEach((point, i) => {
+        const isLeftSide = i % 2 === 0;
+        const slideX = isLeftSide ? 
+          Math.max(20, point.x - slideWidth - 80) : 
+          Math.min(containerWidth - slideWidth - 20, point.x + 80);
+        const slideY = Math.max(20, point.y - slideHeight / 2);
+        
+        slidePositions.push({ x: Math.round(slideX), y: Math.round(slideY) });
+        
+        // Store connector info for reference
+        const startPoint = { 
+          x: isLeftSide ? slideX + slideWidth : slideX, 
+          y: point.y 
+        };
+        connectorData.push({ startPoint, milestone: point });
+      });
+
+      return { pathDefinition, milestonePoints, slidePositions, connectorData };
+    }
+
+    // Helper function to convert image to base64 and get dimensions
+    async function imageToBase64(imagePath) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous'; // Enable CORS
+        
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          
+          // Set canvas size to image size
+          canvas.width = img.naturalWidth;
+          canvas.height = img.naturalHeight;
+          
+          // Draw image to canvas
+          ctx.drawImage(img, 0, 0);
+          
+          // Convert to base64
+          try {
+            const dataURL = canvas.toDataURL('image/png');
+            resolve({
+              dataURL: dataURL,
+              width: img.naturalWidth,
+              height: img.naturalHeight,
+              aspectRatio: img.naturalWidth / img.naturalHeight
+            });
+          } catch (error) {
+            console.warn(`Failed to convert image to base64: ${imagePath}`, error);
+            resolve(null);
+          }
+        };
+        
+        img.onerror = function() {
+          console.warn(`Failed to load image: ${imagePath}`);
+          resolve(null);
+        };
+        
+        // Try loading the image
+        img.src = imagePath;
+      });
+    }
+
+    // Download SVG for Figma function
+    async function downloadSVG() {
+      console.log('=== SVG Download Started ===');
+      try {
+        // Get current theme
+        const theme = themes[currentThemeKey];
+        console.log('Current theme:', theme);
+        
+        // Use the same events data as the timeline preview
+        console.log('Using events from timeline preview:', events.length, 'events');
+        console.log('Using positions from timeline preview:', positions);
+        
+        // If no events or no positions loaded, show error
+        if (!events || events.length === 0) {
+          alert('No timeline events found. Please ensure the timeline data is loaded.');
+          return;
+        }
+        
+        if (!positions || !positions.milestonePoints || !positions.slidePositions) {
+          alert('No timeline layout found. Please ensure the timeline positions are loaded.');
+          return;
+        }
+        
+        console.log(`=== Generating SVG with ${events.length} events ===`);
+        console.log('Events data:', events);
+        console.log('Layout data:', positions);
+        
+        // Use the exact same dimensions and layout as the timeline preview
+        const canvasWidth = positions.virtualCanvas.width;
+        const canvasHeight = positions.virtualCanvas.height;
+        const slideWidth = 240;
+        const slideHeight = 150;
+        
+        // Round coordinates for cleaner rendering
+        const cleanPathDefinition = positions.pathDefinition.replace(/(\d+\.\d+)/g, (match) => {
+          return Math.round(parseFloat(match)).toString();
+        });
+        
+        console.log('Using exact positions from timeline preview:', {
+          canvasWidth,
+          canvasHeight,
+          milestonePoints: positions.milestonePoints,
+          slidePositions: positions.slidePositions,
+          pathDefinition: positions.pathDefinition,
+          cleanPathDefinition: cleanPathDefinition
+        });
+        
+        // Load all images as base64
+        const imagesToLoad = events.filter(event => event.image && event.image.trim() !== '').length;
+        if (imagesToLoad > 0) {
+          console.log(`Loading ${imagesToLoad} images...`);
+          
+          // Show loading feedback
+          const originalButtonText = document.querySelector('button[onclick="downloadSVG()"]').textContent;
+          const button = document.querySelector('button[onclick="downloadSVG()"]');
+          button.textContent = '⏳ Loading images...';
+          button.disabled = true;
+        }
+        
+        const imagePromises = events.map(async (event, index) => {
+          if (event.image && event.image.trim() !== '') {
+            console.log(`Loading image ${index}: ${event.image}`);
+            const imageData = await imageToBase64(event.image);
+            return { 
+              index, 
+              imageData, 
+              originalPath: event.image 
+            };
+          }
+          return { 
+            index, 
+            imageData: null, 
+            originalPath: null 
+          };
+        });
+        
+        const imageResults = await Promise.all(imagePromises);
+        console.log('Image loading results:', imageResults);
+        
+        // Restore button
+        if (imagesToLoad > 0) {
+          const button = document.querySelector('button[onclick="downloadSVG()"]');
+          button.textContent = '📥 Download SVG for Figma';
+          button.disabled = false;
+        }
+        
+        // Create SVG structure with organized layers
+        let svgContent = `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+     width="${canvasWidth}" height="${canvasHeight}" viewBox="0 0 ${canvasWidth} ${canvasHeight}">
+  
+  <!-- Definitions for gradients and effects -->
+  <defs>
+    <linearGradient id="timeline-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#8A2BE2"/>
+      <stop offset="25%" stop-color="#1E90FF"/>
+      <stop offset="50%" stop-color="#00CED1"/>
+      <stop offset="75%" stop-color="#9370DB"/>
+      <stop offset="100%" stop-color="#FF69B4"/>
+    </linearGradient>
+    <filter id="glow" x="-100%" y="-100%" width="300%" height="300%" filterUnits="userSpaceOnUse" primitiveUnits="userSpaceOnUse">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur" in="SourceGraphic"/>
+      <feMorphology operator="dilate" radius="1" result="dilated" in="coloredBlur"/>
+      <feFlood flood-color="#ffffff" flood-opacity="0.3" result="flood"/>
+      <feComposite in="flood" in2="dilated" operator="in" result="glow"/>
+      <feMerge> 
+        <feMergeNode in="glow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background Layer -->
+  <g id="background-layer">
+    <rect width="100%" height="100%" fill="${theme.colors.background || '#111'}"/>
+  </g>
+  
+  <!-- Path Line Layer -->
+  <g id="path-layer">
+    <path d="${cleanPathDefinition}" 
+          stroke="url(#timeline-gradient)" 
+          stroke-width="${theme.dimensions?.pathWidth || 20}" 
+          fill="none" 
+          stroke-linecap="round" 
+          stroke-linejoin="round"
+          shape-rendering="geometricPrecision"
+          filter="url(#glow)"/>
+  </g>
+  
+  <!-- Connector Lines Layer -->
+  <g id="connectors-layer">`;
+
+        // Add connector lines first (behind other elements)
+        positions.slidePositions.forEach((position, index) => {
+          if (positions.milestonePoints[index]) {
+            const milestone = positions.milestonePoints[index];
+            // Determine connection point on slide (closest edge to milestone)
+            let startX, startY;
+            
+            if (milestone.x < position.x + slideWidth / 2) {
+              // Milestone is to the left, connect from left edge
+              startX = position.x;
+              startY = position.y + slideHeight / 2;
+            } else {
+              // Milestone is to the right, connect from right edge
+              startX = position.x + slideWidth;
+              startY = position.y + slideHeight / 2;
+            }
+            
+            svgContent += `
+    <line id="connector-${index}" 
+          x1="${Math.round(startX)}" y1="${Math.round(startY)}" 
+          x2="${Math.round(milestone.x)}" y2="${Math.round(milestone.y)}" 
+          stroke="rgba(255,255,255,0.3)" 
+          stroke-width="2" 
+          stroke-dasharray="5,3"/>`;
+          }
+        });
+
+        svgContent += `
+  </g>
+  
+  <!-- Milestones Layer -->
+  <g id="milestones-layer">`;
+
+        // Add milestones - each as a separate editable element
+        positions.milestonePoints.forEach((point, index) => {
+          const colors = ['#8A2BE2', '#1E90FF', '#00CED1', '#9370DB', '#FF69B4'];
+          const color = colors[index % colors.length];
+          const radius = Math.round((theme.dimensions?.milestoneSize || 24) / 2);
+          
+          svgContent += `
+    <circle id="milestone-${index}" 
+            cx="${Math.round(point.x)}" cy="${Math.round(point.y)}" 
+            r="${radius}" 
+            fill="${color}" 
+            stroke="#ffffff" 
+            stroke-width="3" 
+            shape-rendering="geometricPrecision"/>`;
+        });
+
+        svgContent += `
+  </g>
+  
+  <!-- Events/Slides Layer -->
+  <g id="events-layer">`;
+
+        // Add event slides - each component as separate editable elements
+        positions.slidePositions.forEach((position, index) => {
+          const event = events[index];
+          if (!event) return;
+          
+          svgContent += `
+    <!-- Event ${index + 1}: ${escapeXml(event.title)} -->
+    <g id="event-group-${index}">
+      <!-- Event Background -->
+      <rect id="event-bg-${index}" 
+            x="${Math.round(position.x)}" y="${Math.round(position.y)}" 
+            width="${slideWidth}" height="${slideHeight}" 
+            fill="rgba(0,0,0,0.85)" 
+            stroke="${theme.colors?.activeMilestone || '#6B7280'}" 
+            stroke-width="2" 
+            rx="8" ry="8" 
+            shape-rendering="geometricPrecision"/>
+      
+      <!-- Event Title Group -->
+      <g id="event-title-${index}">`;
+          
+          // Add event title as separate text elements
+          const titleLines = wrapText(event.title, 28);
+          titleLines.forEach((line, lineIndex) => {
+            svgContent += `
+        <text id="event-title-line-${index}-${lineIndex}" 
+              x="${Math.round(position.x + 15)}" y="${Math.round(position.y + 30 + (lineIndex * 18))}" 
+              fill="${theme.colors?.textPrimary || '#ffffff'}" 
+              font-family="Arial, sans-serif" 
+              font-size="15" 
+              font-weight="bold" 
+              text-rendering="geometricPrecision">${escapeXml(line)}</text>`;
+          });
+          
+          svgContent += `
+      </g>
+      
+      <!-- Event Content Group -->
+      <g id="event-content-${index}">`;
+          
+          // Add event content as separate text elements
+          const contentLines = wrapText(stripHtml(event.content), 32);
+          const contentStartY = Math.round(position.y + 30 + (titleLines.length * 18) + 15);
+          contentLines.slice(0, 7).forEach((line, lineIndex) => { // Allow more lines
+            svgContent += `
+        <text id="event-content-line-${index}-${lineIndex}" 
+              x="${Math.round(position.x + 15)}" y="${contentStartY + (lineIndex * 14)}" 
+              fill="rgba(255,255,255,0.9)" 
+              font-family="Arial, sans-serif" 
+              font-size="12" 
+              text-rendering="geometricPrecision">${escapeXml(line)}</text>`;
+          });
+          
+          svgContent += `
+      </g>
+      
+      <!-- Event Image Placeholder -->
+      <g id="event-image-${index}">`;
+          
+          // Add actual image if image exists
+          const imageResult = imageResults.find(img => img.index === index);
+          if (imageResult && (imageResult.imageData || imageResult.originalPath)) {
+            const imageY = Math.round(contentStartY + (Math.min(contentLines.length, 7) * 14) + 10);
+            const maxImageWidth = slideWidth - 30; // Available width
+            const maxImageHeight = 100; // Maximum height we want to allow
+            
+            if (imageResult.imageData) {
+              // Calculate proper dimensions maintaining aspect ratio
+              const { dataURL, aspectRatio } = imageResult.imageData;
+              
+              let finalWidth, finalHeight;
+              
+              // Calculate dimensions that fit within our constraints while maintaining aspect ratio
+              if (aspectRatio > 1) {
+                // Landscape image - width is the limiting factor
+                finalWidth = Math.min(maxImageWidth, imageResult.imageData.width);
+                finalHeight = finalWidth / aspectRatio;
+                
+                // If height is too tall, recalculate based on height
+                if (finalHeight > maxImageHeight) {
+                  finalHeight = maxImageHeight;
+                  finalWidth = finalHeight * aspectRatio;
+                }
+              } else {
+                // Portrait or square image - height is usually the limiting factor
+                finalHeight = Math.min(maxImageHeight, imageResult.imageData.height);
+                finalWidth = finalHeight * aspectRatio;
+                
+                // If width is too wide, recalculate based on width
+                if (finalWidth > maxImageWidth) {
+                  finalWidth = maxImageWidth;
+                  finalHeight = finalWidth / aspectRatio;
+                }
+              }
+              
+              // Center the image horizontally within the available space
+              const imageX = Math.round(position.x + 15 + (maxImageWidth - finalWidth) / 2);
+              
+              console.log(`Image ${index}: original(${imageResult.imageData.width}x${imageResult.imageData.height}) ratio(${aspectRatio.toFixed(2)}) final(${finalWidth.toFixed(1)}x${finalHeight.toFixed(1)})`);
+              
+              svgContent += `
+        <!-- Actual loaded image with proper aspect ratio -->
+        <image id="event-image-${index}" 
+               x="${imageX}" y="${imageY}" 
+               width="${Math.round(finalWidth)}" height="${Math.round(finalHeight)}" 
+               href="${dataURL}" 
+               preserveAspectRatio="xMidYMid meet"/>`;
+            } else if (imageResult.originalPath) {
+              // Fallback: show placeholder with filename
+              svgContent += `
+        <!-- Image placeholder (failed to load) -->
+        <rect id="event-image-bg-${index}" 
+              x="${Math.round(position.x + 15)}" y="${imageY}" 
+              width="${maxImageWidth}" height="${maxImageHeight}" 
+              fill="rgba(107, 114, 128, 0.2)" 
+              stroke="rgba(107, 114, 128, 0.5)" 
+              stroke-width="1" 
+              stroke-dasharray="3,2" 
+              rx="4" 
+              shape-rendering="geometricPrecision"/>
+        <text id="event-image-label-${index}" 
+              x="${Math.round(position.x + slideWidth/2)}" y="${imageY + maxImageHeight/2}" 
+              text-anchor="middle" 
+              fill="#6B7280" 
+              font-family="Arial, sans-serif" 
+              font-size="11" 
+              text-rendering="geometricPrecision">🖼️ ${escapeXml(imageResult.originalPath)}</text>
+        <text id="event-image-error-${index}" 
+              x="${Math.round(position.x + slideWidth/2)}" y="${imageY + maxImageHeight/2 + 15}" 
+              text-anchor="middle" 
+              fill="#EF4444" 
+              font-family="Arial, sans-serif" 
+              font-size="9" 
+              text-rendering="geometricPrecision">(Failed to load)</text>`;
+            }
+          }
+          
+          svgContent += `
+      </g>
+    </g>`;
+        });
+
+        svgContent += `
+  </g>
+  
+  <!-- Images Layer (for future use) -->
+  <g id="images-layer">
+    <!-- Images would be added here as embedded base64 or external references -->
+  </g>
+  
+</svg>`;
+
+        console.log('SVG Content length:', svgContent.length);
+        console.log('SVG Content preview:', svgContent.substring(0, 500));
+        
+        // Download the SVG file with timestamp to avoid caching
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+        const blob = new Blob([svgContent], { type: 'image/svg+xml' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `timeline-for-figma-${timestamp}.svg`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        console.log(`=== SVG downloaded successfully as: timeline-for-figma-${timestamp}.svg ===`);
+        alert(`SVG downloaded as: timeline-for-figma-${timestamp}.svg`);
+        
+      } catch (error) {
+        console.error('Error generating SVG:', error);
+        console.error('Error stack:', error.stack);
+        alert('Error generating SVG. Please check the browser console for details.');
+      }
+    }
+
+    // Helper functions for SVG generation
+    function wrapText(text, maxChars) {
+      const words = text.split(' ');
+      const lines = [];
+      let currentLine = '';
+      
+      words.forEach(word => {
+        if ((currentLine + word).length <= maxChars) {
+          currentLine += (currentLine ? ' ' : '') + word;
+        } else {
+          if (currentLine) lines.push(currentLine);
+          currentLine = word;
+        }
+      });
+      
+      if (currentLine) lines.push(currentLine);
+      return lines;
+    }
+    
+    function stripHtml(html) {
+      const temp = document.createElement('div');
+      temp.innerHTML = html;
+      return temp.textContent || temp.innerText || '';
+    }
+    
+    function escapeXml(text) {
+      return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
     }
   </script>
 </body>
